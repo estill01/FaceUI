@@ -27,9 +27,10 @@ document.body.appendChild(renderer.domElement);
 // - Nasal Bridge
 // - Nasal Septum
 //
+// Mouth
+//
 // Jaw
 //
-// Mouth
 //
 //
 //
@@ -275,6 +276,46 @@ function animateOrbicularisOculi(eyeGroup, contractionIntensity) {
   muscle.geometry = new THREE.ShapeGeometry(muscleShape);
 }
 
+// ====================
+// Cheeks
+// ====================
+function createCheekBones(options) {
+  const cheekGeometry = new THREE.BoxGeometry(options.cheekWidth, options.cheekHeight, options.cheekDepth);
+  const cheekMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+
+  // Create left and right cheek bones and position them
+  const leftCheek = new THREE.Mesh(cheekGeometry, cheekMaterial);
+  leftCheek.position.set(options.headSize / 2 + options.earWidth + options.cheekWidth / 2, -options.headSize / 2 + options.cheekHeight / 2, 0);
+
+  const rightCheek = new THREE.Mesh(cheekGeometry, cheekMaterial);
+  rightCheek.position.set(-options.headSize / 2 - options.earWidth - options.cheekWidth / 2, -options.headSize / 2 + options.cheekHeight / 2, 0);
+
+  return { leftCheek, rightCheek };
+}
+
+function createCheekBones(options) {
+  const cheekGeometry = new THREE.BoxGeometry(options.cheekWidth, options.cheekHeight, options.cheekDepth);
+  const cheekMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+
+  // Create left and right cheek bones and position them
+  const leftCheek = new THREE.Mesh(cheekGeometry, cheekMaterial);
+  leftCheek.position.set(options.headSize / 2 + options.earWidth + options.cheekWidth / 2, -options.headSize / 2 + options.cheekHeight / 2, 0);
+
+  const rightCheek = new THREE.Mesh(cheekGeometry, cheekMaterial);
+  rightCheek.position.set(-options.headSize / 2 - options.earWidth - options.cheekWidth / 2, -options.headSize / 2 + options.cheekHeight / 2, 0);
+
+  return { leftCheek, rightCheek };
+}
+
+function createBuccalRegion(options) {
+  const buccalGeometry = new THREE.BoxGeometry(options.buccalWidth, options.buccalHeight, options.buccalDepth);
+  const buccalMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+
+  const buccal = new THREE.Mesh(buccalGeometry, buccalMaterial);
+  buccal.position.set(0, -options.noseHeight / 2 - options.buccalHeight / 2, options.headSize - options.buccalDepth / 2);
+
+  return buccal;
+}
 
 // ====================
 // Facial Expressions
@@ -443,6 +484,328 @@ function animateDisgust() {
   const lowerLidY = faceOptions.eyeSize / 2;
   setEyelidPosition(faceModel.children[4], upperLidY, lowerLidY);
 }
+
+// ==============================
+// Nose
+// ==============================
+function createNose(options) {
+  // Create the nasal bone using a BoxGeometry
+  const nasalBoneGeometry = new THREE.BoxGeometry(options.nasalBoneWidth, options.nasalBoneHeight, options.nasalBoneDepth);
+  const nasalBoneMaterial = new THREE.MeshPhongMaterial({ color: options.nasalBoneColor });
+  const nasalBone = new THREE.Mesh(nasalBoneGeometry, nasalBoneMaterial);
+
+  // Create the upper lateral cartilage using a BoxGeometry
+  const upperLateralCartilageGeometry = new THREE.BoxGeometry(options.upperLateralCartilageWidth, options.upperLateralCartilageHeight, options.upperLateralCartilageDepth);
+  const upperLateralCartilageMaterial = new THREE.MeshPhongMaterial({ color: options.upperLateralCartilageColor });
+  const upperLateralCartilage = new THREE.Mesh(upperLateralCartilageGeometry, upperLateralCartilageMaterial);
+  upperLateralCartilage.position.set(0, options.nasalBoneHeight / 2 + options.upperLateralCartilageHeight / 2, 0);
+  nasalBone.add(upperLateralCartilage);
+
+  // Create the lower lateral cartilage using a BoxGeometry
+  const lowerLateralCartilageGeometry = new THREE.BoxGeometry(options.lowerLateralCartilageWidth, options.lowerLateralCartilageHeight, options.lowerLateralCartilageDepth);
+  const lowerLateralCartilageMaterial = new THREE.MeshPhongMaterial({ color: options.lowerLateralCartilageColor });
+  const lowerLateralCartilage = new THREE.Mesh(lowerLateralCartilageGeometry, lowerLateralCartilageMaterial);
+  lowerLateralCartilage.position.set(0, -(options.nasalBoneHeight / 2 + options.lowerLateralCartilageHeight / 2), 0);
+  nasalBone.add(lowerLateralCartilage);
+
+  // Create the nostrils using a BoxGeometry
+  const nostrilGeometry = new THREE.BoxGeometry(options.nostrilWidth, options.nostrilHeight, options.nostrilDepth);
+  const nostrilMaterial = new THREE.MeshPhongMaterial({ color: options.nasalBoneColor });
+  const leftNostril = new THREE.Mesh(nostrilGeometry, nostrilMaterial);
+  const rightNostril = new THREE.Mesh(nostrilGeometry, nostrilMaterial);
+  leftNostril.position.set(options.nostrilSeparation / 2, 0, 0);
+  rightNostril.position.set(-options.nostrilSeparation / 2, 0, 0);
+  lowerLateralCartilage.add(leftNostril);
+  lowerLateralCartilage.add(rightNostril);
+
+  // Create the maxilla using a BoxGeometry
+  const maxillaGeometry = new THREE.BoxGeometry(options.maxillaWidth, options.maxillaHeight, options.maxillaDepth);
+  const maxillaMaterial = new THREE.MeshPhongMaterial({ color: options.maxillaColor });
+  const maxilla = new THREE.Mesh(maxillaGeometry, maxillaMaterial);
+  maxilla.position.set(0, -options.maxillaHeight / 2, 0);
+  nasalBone.add(maxilla);
+
+  return nasalBone;
+}
+
+function getDefaultNoseConfig() {
+  return {
+    nasalBoneWidth: 1,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 1,
+    nasalBoneColor: 0xffffff,
+    upperLateralCartilageWidth: 1,
+    upperLateralCartilageHeight: 1,
+    upperLateralCartilageDepth: 1,
+    upperLateralCartilageColor: 0xffffff,
+    lowerLateralCartilageWidth: 1,
+    lowerLateralCartilageHeight: 1,
+    lowerLateralCartilageDepth: 1,
+    lowerLateralCartilageColor: 0xffffff,
+    nostrilWidth: 0.2,
+    nostrilHeight: 0.2,
+    nostrilDepth: 0.2,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1,
+    maxillaHeight: 1,
+    maxillaDepth: 1,
+    maxillaColor: 0xffffff,
+  };
+}
+
+// Generate a configuration for a small, narrow nose
+function getSmallNoseConfig() {
+  return {
+    nasalBoneWidth: 0.8,
+    nasalBoneHeight: 0.8,
+    nasalBoneDepth: 0.8,
+    upperLateralCartilageWidth: 0.8,
+    upperLateralCartilageHeight: 0.6,
+    upperLateralCartilageDepth: 0.6,
+    lowerLateralCartilageWidth: 0.8,
+    lowerLateralCartilageHeight: 0.4,
+    lowerLateralCartilageDepth: 0.6,
+    nostrilWidth: 0.15,
+    nostrilHeight: 0.15,
+    nostrilDepth: 0.15,
+    nostrilSeparation: 0.2,
+    maxillaWidth: 0.8,
+    maxillaHeight: 0.4,
+    maxillaDepth: 0.8,
+  };
+}
+
+// Generate a configuration for a large, broad nose
+function getLargeNoseConfig() {
+  return {
+    nasalBoneWidth: 1.2,
+    nasalBoneHeight: 1.2,
+    nasalBoneDepth: 1.2,
+    upperLateralCartilageWidth: 1.2,
+    upperLateralCartilageHeight: 0.8,
+    upperLateralCartilageDepth: 0.8,
+    lowerLateralCartilageWidth: 1.2,
+    lowerLateralCartilageHeight: 0.6,
+    lowerLateralCartilageDepth: 0.8,
+    nostrilWidth: 0.25,
+    nostrilHeight: 0.25,
+    nostrilDepth: 0.25,
+    nostrilSeparation: 0.4,
+    maxillaWidth: 1.2,
+    maxillaHeight: 0.6,
+    maxillaDepth: 1.2,
+  };
+}
+// Generate a configuration for a sharp, angular nose
+function getSharpNoseConfig() {
+  return {
+    nasalBoneWidth: 1,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 0.6,
+    upperLateralCartilageWidth: 1,
+    upperLateralCartilageHeight: 0.6,
+    upperLateralCartilageDepth: 0.4,
+    lowerLateralCartilageWidth: 1,
+    lowerLateralCartilageHeight: 0.4,
+    lowerLateralCartilageDepth: 0.4,
+    nostrilWidth: 0.2,
+    nostrilHeight: 0.2,
+    nostrilDepth: 0.15,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1,
+    maxillaHeight: 0.4,
+    maxillaDepth: 0.6,
+  };
+}
+
+// Generate a configuration for a rounded, bulbous nose
+function getBulbousNoseConfig() {
+  return {
+    nasalBoneWidth: 1,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 1,
+    upperLateralCartilageWidth: 1,
+    upperLateralCartilageHeight: 1,
+    upperLateralCartilageDepth: 1,
+    lowerLateralCartilageWidth: 1,
+    lowerLateralCartilageHeight: 1,
+    lowerLateralCartilageDepth: 1,
+    nostrilWidth: 0.3,
+    nostrilHeight: 0.3,
+    nostrilDepth: 0.3,
+    nostrilSeparation: 0.4,
+    maxillaWidth: 1,
+    maxillaHeight: 1,
+    maxillaDepth: 1,
+  };
+}
+
+// Generate a configuration for a long, narrow nose
+function getLongNoseConfig() {
+  return {
+    nasalBoneWidth: 1,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 1,
+    upperLateralCartilageWidth: 1,
+    upperLateralCartilageHeight: 0.8,
+    upperLateralCartilageDepth: 0.8,
+    lowerLateralCartilageWidth: 1,
+    lowerLateralCartilageHeight: 0.6,
+    lowerLateralCartilageDepth: 0.8,
+    nostrilWidth: 0.2,
+    nostrilHeight: 0.2,
+    nostrilDepth: 0.2,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1,
+    maxillaHeight: 0.6,
+    maxillaDepth: 1,
+  };
+}
+
+// Generate a configuration for a short, wide nose
+function getWideNoseConfig() {
+  return {
+    nasalBoneWidth: 1.2,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 1.2,
+    upperLateralCartilageWidth: 1.2,
+    upperLateralCartilageHeight: 0.6,
+    upperLateralCartilageDepth: 0.8,
+    lowerLateralCartilageWidth: 1.2,
+    lowerLateralCartilageHeight: 0.4,
+    lowerLateralCartilageDepth: 0.6,
+    nostrilWidth: 0.25,
+    nostrilHeight: 0.25,
+    nostrilDepth: 0.2,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1.2,
+    maxillaHeight: 0.6,
+    maxillaDepth: 1.2,
+  };
+}
+
+// Generate a configuration for a Roman nose
+function getRomanNoseConfig() {
+  return {
+    nasalBoneWidth: 1.2,
+    nasalBoneHeight: 1.2,
+    nasalBoneDepth: 0.8,
+    upperLateralCartilageWidth: 1.2,
+    upperLateralCartilageHeight: 0.8,
+    upperLateralCartilageDepth: 0.6,
+    lowerLateralCartilageWidth: 1.2,
+    lowerLateralCartilageHeight: 0.6,
+    lowerLateralCartilageDepth: 0.6,
+    nostrilWidth: 0.2,
+    nostrilHeight: 0.2,
+    nostrilDepth: 0.15,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1.2,
+    maxillaHeight: 0.6,
+    maxillaDepth: 1,
+  };
+}
+
+// Generate a configuration for a snub nose
+function getSnubNoseConfig() {
+  return {
+    nasalBoneWidth: 0.8,
+    nasalBoneHeight: 0.8,
+    nasalBoneDepth: 0.6,
+    upperLateralCartilageWidth: 0.8,
+    upperLateralCartilageHeight: 0.6,
+    upperLateralCartilageDepth: 0.4,
+    lowerLateralCartilageWidth: 0.8,
+    lowerLateralCartilageHeight: 0.4,
+    lowerLateralCartilageDepth: 0.4,
+    nostrilWidth: 0.15,
+    nostrilHeight: 0.15,
+    nostrilDepth: 0.15,
+    nostrilSeparation: 0.2,
+    maxillaWidth: 0.8,
+    maxillaHeight: 0.4,
+    maxillaDepth: 0.6,
+  };
+}
+
+// Generate a configuration for a hawk nose
+function getHawkNoseConfig() {
+  return {
+    nasalBoneWidth: 1.2,
+    nasalBoneHeight: 1,
+    nasalBoneDepth: 0.8,
+    upperLateralCartilageWidth: 1.2,
+    upperLateralCartilageHeight: 0.6,
+    upperLateralCartilageDepth: 0.6,
+    lowerLateralCartilageWidth: 1.2,
+    lowerLateralCartilageHeight: 0.4,
+    lowerLateralCartilageDepth: 0.4,
+    nostrilWidth: 0.2,
+    nostrilHeight: 0.2,
+    nostrilDepth: 0.2,
+    nostrilSeparation: 0.3,
+    maxillaWidth: 1.2,
+    maxillaHeight: 0.6,
+    maxillaDepth: 1,
+  };
+}
+
+// Generate a random nose configuration
+function getRandomNoseConfig(
+  nasalBoneWidthRange = [0.8, 1.4],
+  nasalBoneHeightRange = [0.8, 1.4],
+  nasalBoneDepthRange = [0.4, 0.8],
+  upperLateralCartilageWidthRange = [0.8, 1.4],
+  upperLateralCartilageHeightRange = [0.4, 0.8],
+  upperLateralCartilageDepthRange = [0.3, 0.6],
+  lowerLateralCartilageWidthRange = [0.8, 1.4],
+  lowerLateralCartilageHeightRange = [0.3, 0.6],
+  lowerLateralCartilageDepthRange = [0.3, 0.6],
+  nostrilWidthRange = [0.1, 0.3],
+  nostrilHeightRange = [0.1, 0.3],
+  nostrilDepthRange = [0.1, 0.3],
+  nostrilSeparationRange = [0.2, 0.5],
+  maxillaWidthRange = [0.8, 1.4],
+  maxillaHeightRange = [0.4, 0.8],
+  maxillaDepthRange = [0.4, 0.8]
+) {
+  const nasalBoneWidth = Math.random() * (nasalBoneWidthRange[1] - nasalBoneWidthRange[0]) + nasalBoneWidthRange[0];
+  const nasalBoneHeight = Math.random() * (nasalBoneHeightRange[1] - nasalBoneHeightRange[0]) + nasalBoneHeightRange[0];
+  const nasalBoneDepth = Math.random() * (nasalBoneDepthRange[1] - nasalBoneDepthRange[0]) + nasalBoneDepthRange[0];
+  const upperLateralCartilageWidth = Math.random() * (upperLateralCartilageWidthRange[1] - upperLateralCartilageWidthRange[0]) + upperLateralCartilageWidthRange[0];
+  const upperLateralCartilageHeight = Math.random() * (upperLateralCartilageHeightRange[1] - upperLateralCartilageHeightRange[0]) + upperLateralCartilageHeightRange[0];
+  const upperLateralCartilageDepth = Math.random() * (upperLateralCartilageDepthRange[1] - upperLateralCartilageDepthRange[0]) + upperLateralCartilageDepthRange[0];
+  const lowerLateralCartilageWidth = Math.random() * (lowerLateralCartilageWidthRange[1] - lowerLateralCartilageWidthRange[0]) + lowerLateralCartilageWidthRange[0];
+  const lowerLateralCartilageHeight = Math.random() * (lowerLateralCartilageHeightRange[1] - lowerLateralCartilageHeightRange[0]) + lowerLateralCartilageHeightRange[0];
+  const lowerLateralCartilageDepth = Math.random() * (lowerLateralCartilageDepthRange[1] - lowerLateralCartilageDepthRange[0]) + lowerLateralCartilageDepthRange[0];
+  const nostrilWidth = Math.random() * (nostrilWidthRange[1] - nostrilWidthRange[0]) + nostrilWidthRange[0];
+  const nostrilHeight = Math.random() * (nostrilHeightRange[1] - nostrilHeightRange[0]) + nostrilHeightRange[0];
+  const nostrilDepth = Math.random() * (nostrilDepthRange[1] - nostrilDepthRange[0]) + nostrilDepthRange[0];
+  const nostrilSeparation = Math.random() * (nostrilSeparationRange[1] - nostrilSeparationRange[0]) + nostrilSeparationRange[0];
+  const maxillaWidth = Math.random() * (maxillaWidthRange[1] - maxillaWidthRange[0]) + maxillaWidthRange[0];
+  const maxillaHeight = Math.random() * (maxillaHeightRange[1] - maxillaHeightRange[0]) + maxillaHeightRange[0];
+  const maxillaDepth = Math.random() * (maxillaDepthRange[1] - maxillaDepthRange[0]) + maxillaDepthRange[0];
+
+  return {
+    nasalBoneWidth,
+    nasalBoneHeight,
+    nasalBoneDepth,
+    upperLateralCartilageWidth,
+    upperLateralCartilageHeight,
+    upperLateralCartilageDepth,
+    lowerLateralCartilageWidth,
+    lowerLateralCartilageHeight,
+    lowerLateralCartilageDepth,
+    nostrilWidth,
+    nostrilHeight,
+    nostrilDepth,
+    nostrilSeparation,
+    maxillaWidth,
+    maxillaHeight,
+    maxillaDepth,
+  };
+}
+
 
 
 
@@ -718,12 +1081,9 @@ function createFaceModel(options) {
   rightEye.position.set(-options.eyeSeparation / 2, options.eyeHeight, options.headSize - options.eyeSize);
   faceGroup.add(rightEye);
  
-  // Create the nose using CylinderGeometry
-  const noseGeometry = new THREE.CylinderGeometry(options.noseWidth, options.noseWidth, options.noseHeight, 16);
-  const noseMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
-  const nose = new THREE.Mesh(noseGeometry, noseMaterial);
+   // Create the nose
+  const nose = createNose(options);
   nose.position.set(0, -options.noseHeight / 2, options.headSize - options.noseHeight / 2);
-  nose.rotation.set(Math.PI / 2, 0, 0);
   faceGroup.add(nose);
 
   // Create the mouth and jaw
@@ -731,6 +1091,16 @@ function createFaceModel(options) {
   const jaw = createJaw(options);
   jaw.add(mouth);
   faceGroup.add(jaw);
+
+
+  // Create the cheek bones
+  const { leftCheek, rightCheek } = createCheekBones(options);
+  faceGroup.add(leftCheek);
+  faceGroup.add(rightCheek);
+
+  // Create the buccal region
+  const buccal = createBuccalRegion(options);
+  faceGroup.add(buccal);
 
 
   // Create the ears using BoxGeometry
