@@ -8,11 +8,112 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// Facial Features
+//
+// Forehead
+// - Eyebrows
+// - Corrugator Supercilii Muscles
+//
+// Eyes
+// - Iris
+// - Pupil
+// - Eyelids
+// - Orbicularis Oculi Muscle
+//
+// Cheeks
+// - Cheekbones
+//
+// Nose
+// - Nasal Bridge
+// - Nasal Septum
+//
+// Jaw
+//
+// Mouth
+//
+//
+//
+//Assume you have the following functions already: moveEye(eyeGroup, xOffset, yOffset), setIrisDilation(eyeGroup, dilationFactor), setEyelidPosition(eyeGroup, upperLidY, lowerLidY), animateBlink(eyeGroup, blinkSpeed), animateSquint(eyeGroup, squintSpeed, squintIntensity)
+
+//
+// -------------------------
+
+// ==========================
+// Forehead
+// ==========================
+function createEyebrow(options) {
+  const eyebrowShape = new THREE.Shape();
+  eyebrowShape.moveTo(-options.eyebrowWidth / 2, 0);
+  eyebrowShape.lineTo(-options.eyebrowWidth / 4, options.eyebrowHeight);
+  eyebrowShape.lineTo(options.eyebrowWidth / 4, options.eyebrowHeight);
+  eyebrowShape.lineTo(options.eyebrowWidth / 2, 0);
+  eyebrowShape.closePath();
+
+  const eyebrowGeometry = new THREE.ShapeGeometry(eyebrowShape);
+  const eyebrowMaterial = new THREE.MeshPhongMaterial({ color: options.eyebrowColor });
+  const eyebrow = new THREE.Mesh(eyebrowGeometry, eyebrowMaterial);
+
+  return eyebrow;
+}
+
+function createCorrugatorMuscle(options) {
+  const muscleGeometry = new THREE.BoxGeometry(options.corrugatorMuscleWidth, options.corrugatorMuscleHeight, options.corrugatorMuscleDepth);
+  const muscleMaterial = new THREE.MeshPhongMaterial({ color: options.headColor, transparent: true, opacity: 0.5 });
+  const muscle = new THREE.Mesh(muscleGeometry, muscleMaterial);
+
+  return muscle;
+}
+
+function createForeheadSection(options) {
+  const forehead = new THREE.Group();
+
+  // Create left and right eyebrows and position them
+  const leftEyebrow = createEyebrow(options);
+  leftEyebrow.position.set(options.eyeSeparation / 2 - options.eyebrowWidth, options.eyeHeight + options.eyebrowOffset, options.headSize - options.eyeSize - options.eyebrowDepth);
+  forehead.add(leftEyebrow);
+
+  const rightEyebrow = createEyebrow(options);
+  rightEyebrow.position.set(-options.eyeSeparation / 2 + options.eyebrowWidth, options.eyeHeight + options.eyebrowOffset, options.headSize - options.eyeSize - options.eyebrowDepth);
+  forehead.add(rightEyebrow);
+
+  // Create the corrugator supercilii muscles and position them
+  const leftCorrugatorMuscle = createCorrugatorMuscle(options);
+  leftCorrugatorMuscle.position.set(options.eyeSeparation / 2 - options.corrugatorMuscleWidth / 2, options.eyeHeight + options.corrugatorMuscleOffset, options.headSize - options.eyeSize - options.corrugatorMuscleDepth);
+  forehead.add(leftCorrugatorMuscle);
+
+  const rightCorrugatorMuscle = createCorrugatorMuscle(options);
+  rightCorrugatorMuscle.position.set(-options.eyeSeparation / 2 + options.corrugatorMuscleWidth / 2, options.eyeHeight + options.corrugatorMuscleOffset, options.headSize - options.eyeSize - options.corrugatorMuscleDepth);
+  forehead.add(rightCorrugatorMuscle);
+
+  return forehead;
+}
+
+// Function to animate the left eyebrow
+function animateLeftEyebrow(time) {
+  const speed = 2;
+  const angle = Math.sin(time * speed) * Math.PI / 6;
+  faceModel.children[5].children[0].rotation.z = angle;
+}
+
+// Function to animate the right eyebrow
+function animateRightEyebrow(time) {
+  const speed = 3;
+  const angle = Math.sin(time * speed) * Math.PI / 8;
+  faceModel.children[5].children[1].rotation.z = angle;
+}
+
+// Function to animate the corrugator muscles
+function animateCorrugatorMuscles(time) {
+  const speed = 4;
+  const offset = Math.sin(time * speed) * 0.02;
+  faceModel.children[5].children[2].position.y = faceOptions.eyeHeight + faceOptions.corrugatorMuscleOffset + offset;
+  faceModel.children[5].children[3].position.y = faceOptions.eyeHeight + faceOptions.corrugatorMuscleOffset + offset;
+}
+
 
 // ==========================
 // EYES
 // ==========================
-
 function createEyeWithLids(options) {
   const eyeGroup = new THREE.Group();
 
@@ -174,6 +275,11 @@ function animateOrbicularisOculi(eyeGroup, contractionIntensity) {
   muscle.geometry = new THREE.ShapeGeometry(muscleShape);
 }
 
+
+// ====================
+// Facial Expressions
+// ====================
+
 function animateFacialExpressions(faceModel, expressionParameters) {
   const leftEye = faceModel.children[1];
   const rightEye = faceModel.children[2];
@@ -199,6 +305,399 @@ function animateFacialExpressions(faceModel, expressionParameters) {
   animateOrbicularisOculi(rightEye, expressionParameters.contractionIntensity);
 }
 
+function animateShock(eyeGroup, forehead) {
+  animateBlink(eyeGroup, 10);
+
+  const speed = 6;
+  const intensity = 0.05 * Math.random();
+
+  animateEyeMovement(eyeGroup, 0, intensity);
+  animateOrbicularisOculi(eyeGroup, intensity);
+
+  const angle = Math.sin(Date.now() * speed * Math.random()) * Math.PI / 12;
+  forehead.children[2].rotation.z = angle;
+  forehead.children[3].rotation.z = -angle;
+}
+
+function animateThinking(eyeGroup, forehead) {
+  animateSquint(eyeGroup, 4, 0.03 * Math.random());
+
+  const speed = 3;
+  const intensity = 0.05 * Math.random();
+
+  animateEyeMovement(eyeGroup, intensity, intensity);
+  animateOrbicularisOculi(eyeGroup, intensity);
+
+  const angle = Math.sin(Date.now() * speed * Math.random()) * Math.PI / 8;
+  forehead.children[2].rotation.z = angle;
+  forehead.children[3].rotation.z = -angle;
+}
+
+function animateAnger(eyeGroup, forehead) {
+  animateSquint(eyeGroup, 6, 0.05 * Math.random());
+
+  const speed = 5;
+  const intensity = 0.1 * Math.random();
+
+  animateEyeMovement(eyeGroup, -intensity, intensity);
+  animateOrbicularisOculi(eyeGroup, intensity);
+
+  const angle = Math.sin(Date.now() * speed * Math.random()) * Math.PI / 6;
+  forehead.children[2].rotation.z = angle;
+  forehead.children[3].rotation.z = -angle;
+}
+
+function animateFear(eyeGroup, forehead) {
+  animateBlink(eyeGroup, 8);
+
+  const speed = 8;
+  const intensity = 0.1 * Math.random();
+
+  animateEyeMovement(eyeGroup, 0, -intensity);
+  animateOrbicularisOculi(eyeGroup, intensity);
+
+  const offset = Math.sin(Date.now() * speed * Math.random()) * 0.05;
+  forehead.children[2].position.y = forehead.children[2].position.y + offset;
+  forehead.children[3].position.y = forehead.children[3].position.y + offset;
+}
+
+function animateBoredom(eyeGroup, forehead) {
+  animateBlink(eyeGroup, 2);
+
+  const speed = 2;
+  const intensity = 0.02 * Math.random();
+
+  animateEyeMovement(eyeGroup, intensity, 0);
+  animateOrbicularisOculi(eyeGroup, intensity);
+
+  const angle = Math.sin(Date.now() * speed * Math.random()) * Math.PI / 24;
+  forehead.children[2].rotation.z = angle;
+  forehead.children[3].rotation.z = -angle;
+}
+
+
+function animateFrown(upperLid, lowerLid, frownIntensity) {
+  const initialUpperY = upperLid.position.y;
+  const initialLowerY = lowerLid.position.y;
+  const speed = 2;
+
+  const frown = () => {
+    const frownDuration = 1 / speed;
+    setEyelidPosition(upperLid, initialUpperY + frownIntensity, null);
+    setEyelidPosition(lowerLid, null, initialLowerY - frownIntensity);
+    setTimeout(() => {
+      setEyelidPosition(upperLid, initialUpperY, null);
+      setEyelidPosition(lowerLid, null, initialLowerY);
+    }, frownDuration * 1000);
+  };
+
+  setInterval(frown, 1000 / speed);
+}
+
+function animateHeadLowering(head, loweringIntensity) {
+  const initialPosition = head.position.y;
+  const speed = 1;
+
+  const lower = () => {
+    const lowerDuration = 1 / speed;
+    head.position.y = initialPosition - loweringIntensity;
+    setTimeout(() => {
+      head.position.y = initialPosition;
+    }, lowerDuration * 1000);
+  };
+
+  setInterval(lower, 1000 / speed);
+}
+
+function animateSurprise() {
+  const eyebrowSpeed = 3;
+  const eyebrowAngle = Math.sin(Date.now() * eyebrowSpeed) * Math.PI / 8;
+  faceModel.children[5].children[0].rotation.z = -eyebrowAngle;
+  faceModel.children[5].children[1].rotation.z = eyebrowAngle;
+
+  const eyeSpeed = 4;
+  const eyeYOffset = Math.sin(Date.now() * eyeSpeed) * 0.02;
+  moveEye(faceModel.children[4], 0, eyeYOffset);
+
+  const dilationSpeed = 0.01;
+  const minDilation = 0.5;
+  const maxDilation = 1.5;
+  animateIrisDilation(faceModel.children[4], dilationSpeed, minDilation, maxDilation);
+
+  const muscleIntensity = 0.2;
+  animateOrbicularisOculi(faceModel.children[4], muscleIntensity);
+}
+
+function animateDisgust() {
+  const eyebrowSpeed = 4;
+  const eyebrowAngle = Math.sin(Date.now() * eyebrowSpeed) * Math.PI / 8;
+  faceModel.children[5].children[0].rotation.z = -eyebrowAngle;
+  faceModel.children[5].children[1].rotation.z = eyebrowAngle;
+
+  const dilationSpeed = -0.01;
+  const minDilation = 0.5;
+  const maxDilation = 1.5;
+  animateIrisDilation(faceModel.children[4], dilationSpeed, minDilation, maxDilation);
+
+  const upperLidY = -faceOptions.eyeSize / 2;
+  const lowerLidY = faceOptions.eyeSize / 2;
+  setEyelidPosition(faceModel.children[4], upperLidY, lowerLidY);
+}
+
+
+
+// ==============================
+// Mouth and Jaw
+// ==============================
+// Function to create the mouth
+function createMouth(options) {
+  const mouthGroup = new THREE.Group();
+
+  // Create the lips using BoxGeometry
+  const lipsGeometry = new THREE.BoxGeometry(options.mouthWidth, options.lipHeight, options.mouthDepth);
+  const lipsMaterial = new THREE.MeshPhongMaterial({ color: options.lipsColor });
+  const upperLip = new THREE.Mesh(lipsGeometry, lipsMaterial);
+  const lowerLip = new THREE.Mesh(lipsGeometry, lipsMaterial);
+  upperLip.position.set(0, options.lipHeight / 2, 0);
+  lowerLip.position.set(0, -options.lipHeight / 2, 0);
+  mouthGroup.add(upperLip);
+  mouthGroup.add(lowerLip);
+
+  // Create the tongue
+  const tongue = createTongue(options);
+  tongue.position.set(0, -options.tongueHeight / 2, options.mouthDepth / 2);
+  mouthGroup.add(tongue);
+
+  // Create the oral cavity
+  const oralCavity = createOralCavity(options);
+  oralCavity.position.set(0, 0, options.mouthDepth / 2);
+  mouthGroup.add(oralCavity);
+
+  return mouthGroup;
+}
+
+// Function to create the jaw
+function createJaw(options) {
+  const jawGroup = new THREE.Group();
+
+  // Create the lower jaw using BoxGeometry
+  const jawGeometry = new THREE.BoxGeometry(options.jawWidth, options.jawHeight, options.jawDepth);
+  const jawMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const jaw = new THREE.Mesh(jawGeometry, jawMaterial);
+  jaw.position.set(0, -options.jawHeight / 2, options.headSize - options.jawDepth / 2);
+  jawGroup.add(jaw);
+
+  return jawGroup;
+}
+
+// Function to create the oral cavity
+function createOralCavity(options) {
+  const oralCavityGroup = new THREE.Group();
+
+  // Create the inner mouth using BoxGeometry
+  const innerMouthGeometry = new THREE.BoxGeometry(options.innerMouthWidth, options.innerMouthHeight, options.innerMouthDepth);
+  const innerMouthMaterial = new THREE.MeshPhongMaterial({ color: options.innerMouthColor });
+  const innerMouth = new THREE.Mesh(innerMouthGeometry, innerMouthMaterial);
+  innerMouth.position.set(0, 0, options.innerMouthDepth / 2);
+  oralCavityGroup.add(innerMouth);
+
+  // Create the teeth using BoxGeometry
+  const teethGeometry = new THREE.BoxGeometry(options.teethWidth, options.teethHeight, options.teethDepth);
+  const teethMaterial = new THREE.MeshPhongMaterial({ color: options.teethColor });
+  const teeth = new THREE.Mesh(teethGeometry, teethMaterial);
+  teeth.position.set(0, -options.teethHeight / 2, options.innerMouthDepth / 2 + options.teethDepth / 2);
+  oralCavityGroup.add(teeth);
+
+  return oralCavityGroup;
+}
+
+// Function to create the tongue
+function createTongue(options) {
+  const tongueGeometry = new THREE.BoxGeometry(options.tongueWidth, options.tongueHeight, options.tongueDepth);
+  const tongueMaterial = new THREE.MeshPhongMaterial({ color: options.tongueColor });
+  const tongue = new THREE.Mesh(tongueGeometry, tongueMaterial);
+
+  return tongue;
+}
+
+// -----------------------
+// Speech Animations
+// -----------------------
+
+// Function to animate the jaw and mouth for a given phoneme
+function animatePhenome(phenome, mouth, jaw, tongue, options, time) {
+  const lipMovement = 0.2;
+  switch (phenome) {
+    case 'AA':
+      // Open the jaw wide and round the lips
+      animateJaw(jaw, options, time, 1);
+      animateMouth(mouth, options, time, 0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0.5);
+      break;
+    case 'AE':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0.5);
+      break;
+    case 'AH':
+      // Open the jaw slightly and relax the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, 0, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0.5);
+      break;
+    case 'AO':
+      // Open the jaw wide and round the lips
+      animateJaw(jaw, options, time, 1);
+      animateMouth(mouth, options, time, 0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, -0.5, 0.5, 0.5);
+      break;
+    case 'AW':
+      // Open the jaw wide and round the lips
+      animateJaw(jaw, options, time, 1);
+      animateMouth(mouth, options, time, 0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, -0.5, 0.5, 0.5);
+      break;
+    case 'AY':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0.5, 1, 0.5);
+      break;
+    case 'EH':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0.5);
+      break;
+    case 'ER':
+      // Open the jaw slightly and round the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, 0, -1, lipMovement);
+      animateTongue(tongue, options, time, 0.5, 0.5, 0.5);
+      break;
+    case 'EY':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0.5, 1, 0.5);
+      break;
+    case 'IH':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'IY':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -1, -1, lipMovement);
+      animateTongue(tongue, options, time, 1, 1, 0.5);
+      break;
+    case 'OW':
+      // Open the jaw wide and round the lips
+      animateJaw(jaw, options, time, 1);
+      animateMouth(mouth, options, time, 0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, -0.5, -0.5, 0.5);
+      break;
+    case 'OY':
+      // Open the jaw slightly and spread the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0.5, 1, 0.5);
+      break;
+    case 'UH':
+      // Open the jaw slightly and round the lips
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, 0, -1, lipMovement);
+      animateTongue(tongue, options, time, -0.5, -0.5, 0.5);
+      break;
+    case 'UW':
+      // Open the jaw wide and round the lips
+      animateJaw(jaw, options, time, 1);
+      animateMouth(mouth, options, time, 0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 1, 1, 0.5);
+      break;
+    case 'TH':
+      // Place tongue between the teeth and blow air out to produce a hissing sound
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'DH':
+      // Similar to TH sound, but voiced instead of voiceless
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, lipMovement);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'W':
+      // Round the lips and blow air out to produce a vowel-like sound
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -0.5, -1, 0.5);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'Y':
+      // Place tongue near the roof of the mouth and blow air out to produce a vowel-like sound
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -1, -1, 0.5);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'H':
+      // Exhale a burst of air through the mouth
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -1, -1, 0.5);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'L':
+      // Place tip of the tongue against the roof of the mouth and allow air to flow around it
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -1, -1, 0.5);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    case 'R':
+      // Pronounced in different ways depending on dialect and speaker
+      animateJaw(jaw, options, time, 0.5);
+      animateMouth(mouth, options, time, -1, -1, 0.5);
+      animateTongue(tongue, options, time, 0, 0, 0);
+      break;
+    default:
+      console.log(`Phoneme not recognized: ${phenome}`);
+  }
+}
+
+
+
+
+// Function to animate the jaw
+function animateJaw(jaw, options, time, variation) {
+  const movement = Math.sin(time * options.jawSpeed) * options.jawRange * variation;
+  jaw.position.setY(options.headSize - options.jawHeight / 2 - movement);
+}
+
+// Function to animate the mouth
+function animateMouth(mouth, options, time, tonguePosition, lipRoundness, lipMovement) {
+  const upperLip = mouth.children[0];
+  const lowerLip = mouth.children[1];
+  const tongue = mouth.children[2];
+  upperLip.position.setY(options.lipHeight / 2 + lipMovement);
+  lowerLip.position.setY(-options.lipHeight / 2 - lipMovement);
+  upperLip.scale.setX(1 + lipRoundness);
+  lowerLip.scale.setX(1 + lipRoundness);
+  animateTongue(tongue, options, time, tonguePosition, 0, 0);
+}
+
+// Function to animate the tongue
+function animateTongue(tongue, options, time, position, elevation, variation) {
+  const movement = Math.sin(time * options.tongueSpeed) * options.tongueRange * variation;
+  tongue.position.setY(-options.tongueHeight / 2 + position * options.tongueRange + movement);
+  tongue.position.setZ(options.mouthDepth / 2 - options.tongueDepth / 2 + elevation * options.tongueRange);
+}
+
+
+// ====================
+// Face Model
+// ====================
+
 // Function to create a generic 3D human face model
 function createFaceModel(options) {
   // Create a new Group to hold all the face components
@@ -218,7 +717,6 @@ function createFaceModel(options) {
   const rightEye = createEyeWithLids(options);
   rightEye.position.set(-options.eyeSeparation / 2, options.eyeHeight, options.headSize - options.eyeSize);
   faceGroup.add(rightEye);
-
  
   // Create the nose using CylinderGeometry
   const noseGeometry = new THREE.CylinderGeometry(options.noseWidth, options.noseWidth, options.noseHeight, 16);
@@ -228,12 +726,12 @@ function createFaceModel(options) {
   nose.rotation.set(Math.PI / 2, 0, 0);
   faceGroup.add(nose);
 
-  // Create the mouth using BoxGeometry
-  const mouthGeometry = new THREE.BoxGeometry(options.mouthWidth, options.mouthHeight, options.mouthDepth);
-  const mouthMaterial = new THREE.MeshPhongMaterial({ color: options.mouthColor });
-  const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
-  mouth.position.set(0, -options.mouthHeight - options.noseHeight / 2, options.headSize - options.mouthDepth / 2);
-  faceGroup.add(mouth);
+  // Create the mouth and jaw
+  const mouth = createMouth(options);
+  const jaw = createJaw(options);
+  jaw.add(mouth);
+  faceGroup.add(jaw);
+
 
   // Create the ears using BoxGeometry
   const earGeometry = new THREE.BoxGeometry(options.earWidth, options.earHeight, options.earDepth);
@@ -252,10 +750,26 @@ function createFaceModel(options) {
   return faceGroup;
 }
 
+
+
 // Define the options for customization of the face model
 const faceOptions = {
+  // Head
   headSize: 1,
   headColor: 0xf0c8a0,
+
+  // Forehead
+  eyebrowWidth: 0.15,
+  eyebrowHeight: 0.04,
+  eyebrowColor: 0x8b4513, // Saddle Brown
+  eyebrowOffset: 0.04,
+  eyebrowDepth: 0.02,
+  corrugatorMuscleWidth: 0.06,
+  corrugatorMuscleHeight: 0.02,
+  corrugatorMuscleDepth: 0.1,
+  corrugatorMuscleOffset: 0.02,
+
+  // Eyes
   eyeSize: 0.1,
   eyeColor: 0x000000,
   eyeSeparation: 0.4,
@@ -265,16 +779,45 @@ const faceOptions = {
   irisDepth: 0.01,
   pupilSize: 0.03,
   pupilDepth: 0.01,
+
+  // Nose
   noseWidth: 0.1,
   noseHeight: 0.3,
-  mouthWidth: 0.3,
-  mouthHeight: 0.1,
-  mouthDepth: 0.05,
-  mouthColor: 0xe06666,
+
+  // Ears
   earWidth: 0.2,
   earHeight: 0.4,
   earDepth: 0.1,
+
+
+ // Mouth options
+  mouthWidth: 10,
+  mouthHeight: 6,
+  mouthDepth: 4,
+  lipHeight: 1,
+  lipsColor: 0xff69b4,
+  tongueWidth: 6,
+  tongueHeight: 2,
+  tongueDepth: 2,
+  tongueColor: 0xffa07a,
+
+  // Jaw options
+  jawWidth: 14,
+  jawHeight: 8,
+  jawDepth: 10,
+
+  // Oral cavity options
+  innerMouthWidth: 8,
+  innerMouthHeight: 8,
+  innerMouthDepth: 10,
+  innerMouthColor: 0xffffff,
+  teethWidth: 6,
+  teethHeight: 4,
+  teethDepth: 4,
+  teethColor: 0xffff00,
+
 };
+
 
 // Create the face model with the given options
 const faceModel = createFaceModel(faceOptions);
