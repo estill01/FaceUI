@@ -254,7 +254,7 @@ function animateJaw(jaw, options, time, targetJawPosition, currentJawPosition) {
   jaw.position.z = options.headSize - options.jawSize - deltaZ;
 }
 
-function animateMouth(mouth, options, time, targetMouthWidth, targetMouthOpenness, lipMovement, currentMouthWidth, currentMouthOpenness) {
+function animateMouth(mouth, options, time, targetMouthWidth, targetMouthOpenness, lipMovement, currentMouthWidth, currentMouthOpenness, currentMouthDepth) {
   const t = Math.min(1, (time - mouth.startTime) / options.mouthDuration);
 
   const newWidth = currentMouthWidth + (targetMouthWidth - currentMouthWidth) * t;
@@ -265,8 +265,12 @@ function animateMouth(mouth, options, time, targetMouthWidth, targetMouthOpennes
   const deltaY = options.mouthTranslateY * newOpenness;
   mouth.position.y = -options.noseHeight / 2 - options.mouthHeight / 2 - deltaY;
 
+  const newDepth = currentMouthDepth + (options.mouthDepth / 2 * (1 - newOpenness)) * t;
+  const deltaDepth = newDepth - mouth.scale.z;
+  mouth.scale.z += deltaDepth;
+
   const deltaZ = options.mouthTranslateZ * newOpenness + lipMovement * Math.sin(Math.PI * t);
-  mouth.position.z = options.headSize - options.mouthDepth / 2 - deltaZ;
+  mouth.position.z = options.headSize - mouth.scale.z / 2 - deltaZ;
 }
 
 function animateTongue(tongue, options, time, targetTonguePositionX, targetTonguePositionY, targetTongueOpenness, currentTonguePosition) {
