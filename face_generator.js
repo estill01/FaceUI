@@ -805,8 +805,204 @@ function getRandomNoseConfig(
     maxillaDepth,
   };
 }
+function integrateNoses(nose1, nose2) {
+  // Compute the relative scale and orientation of the nose components
+  const scaleRatios = {
+    nasalBone: nose1.nasalBone.width / nose2.nasalBone.width,
+    upperLateralCartilage: nose1.upperLateralCartilage.width / nose2.upperLateralCartilage.width,
+    lowerLateralCartilage: nose1.lowerLateralCartilage.width / nose2.lowerLateralCartilage.width,
+    nostrilWidth: nose1.nostrils.width / nose2.nostrils.width,
+    nostrilHeight: nose1.nostrils.height / nose2.nostrils.height,
+    maxillaWidth: nose1.maxilla.width / nose2.maxilla.width,
+    maxillaHeight: nose1.maxilla.height / nose2.maxilla.height,
+  };
+
+  // Create a new object to store the integrated nose configuration
+  const integratedNose = {
+    nasalBone: {},
+    upperLateralCartilage: {},
+    lowerLateralCartilage: {},
+    nostrils: {},
+    maxilla: {},
+  };
+
+  // Integrate the nasal bone
+  if (scaleRatios.nasalBone >= 1) {
+    integratedNose.nasalBone.width = nose1.nasalBone.width;
+  } else {
+    integratedNose.nasalBone.width = nose2.nasalBone.width;
+  }
+
+  // Integrate the upper lateral cartilage
+  if (scaleRatios.upperLateralCartilage >= 1) {
+    integratedNose.upperLateralCartilage.width = nose1.upperLateralCartilage.width;
+  } else {
+    integratedNose.upperLateralCartilage.width = nose2.upperLateralCartilage.width;
+  }
+
+  // Integrate the lower lateral cartilage
+  if (scaleRatios.lowerLateralCartilage >= 1) {
+    integratedNose.lowerLateralCartilage.width = nose1.lowerLateralCartilage.width;
+  } else {
+    integratedNose.lowerLateralCartilage.width = nose2.lowerLateralCartilage.width;
+  }
+
+  // Integrate the nostrils
+  if (scaleRatios.nostrilWidth >= 1) {
+    integratedNose.nostrils.width = nose1.nostrils.width;
+  } else {
+    integratedNose.nostrils.width = nose2.nostrils.width;
+  }
+
+  if (scaleRatios.nostrilHeight >= 1) {
+    integratedNose.nostrils.height = nose1.nostrils.height;
+  } else {
+    integratedNose.nostrils.height = nose2.nostrils.height;
+  }
+
+  // Integrate the maxilla
+  if (scaleRatios.maxillaWidth >= 1) {
+    integratedNose.maxilla.width = nose1.maxilla.width;
+  } else {
+    integratedNose.maxilla.width = nose2.maxilla.width;
+  }
+
+  if (scaleRatios.maxillaHeight >= 1) {
+    integratedNose.maxilla.height = nose1.maxilla.height;
+  } else {
+    integratedNose.maxilla.height = nose2.maxilla.height;
+  }
+
+  // Return the integrated nose configuration
+  return integratedNose;
+}
 
 
+function generateNoseVariations(noseConfig, numVariations, stochasticity) {
+  const variations = [];
+
+  for (let i = 0; i < numVariations; i++) {
+    // Generate a new configuration based on the input nose config
+    const newNoseConfig = {
+      nasalBoneWidth: noseConfig.nasalBoneWidth + Math.random() * stochasticity,
+      nasalBoneHeight: noseConfig.nasalBoneHeight + Math.random() * stochasticity,
+      upperLateralCartilageWidth: noseConfig.upperLateralCartilageWidth + Math.random() * stochasticity,
+      upperLateralCartilageHeight: noseConfig.upperLateralCartilageHeight + Math.random() * stochasticity,
+      lowerLateralCartilageWidth: noseConfig.lowerLateralCartilageWidth + Math.random() * stochasticity,
+      lowerLateralCartilageHeight: noseConfig.lowerLateralCartilageHeight + Math.random() * stochasticity,
+      nostrilWidth: noseConfig.nostrilWidth + Math.random() * stochasticity,
+      nostrilHeight: noseConfig.nostrilHeight + Math.random() * stochasticity,
+      nostrilDepth: noseConfig.nostrilDepth + Math.random() * stochasticity,
+      nostrilSeparation: noseConfig.nostrilSeparation + Math.random() * stochasticity,
+      maxillaWidth: noseConfig.maxillaWidth + Math.random() * stochasticity,
+      maxillaHeight: noseConfig.maxillaHeight + Math.random() * stochasticity,
+      maxillaDepth: noseConfig.maxillaDepth + Math.random() * stochasticity,
+    };
+
+    variations.push(newNoseConfig);
+  }
+
+  return variations;
+}
+
+function integrateFaces(faces) {
+  // Compute the relative scale and orientation of the face components
+  const scaleRatios = {};
+  const componentNames = Object.keys(faces[0]);
+
+  for (const componentName of componentNames) {
+    const componentSizes = faces.map((face) => face[componentName]?.width);
+    const nonZeroSizes = componentSizes.filter((size) => size > 0);
+
+    if (nonZeroSizes.length === faces.length) {
+      // All faces have this component, so compute the scale ratio
+      const minSize = Math.min(...componentSizes);
+      const maxSize = Math.max(...componentSizes);
+      const scaleRatio = maxSize / minSize;
+      scaleRatios[componentName] = scaleRatio;
+    }
+  }
+
+function integrateFaces(faces, options = {}) {
+  const { weights = {}, features = {} } = options;
+
+  // Compute the relative scale and orientation of the face components
+  const scaleRatios = {};
+  const componentNames = Object.keys(faces[0]);
+
+  for (const componentName of componentNames) {
+    const componentSizes = faces.map((face) => face[componentName]?.width);
+    const nonZeroSizes = componentSizes.filter((size) => size > 0);
+
+    if (nonZeroSizes.length === faces.length) {
+      // All faces have this component, so compute the scale ratio
+      const minSize = Math.min(...componentSizes);
+      const maxSize = Math.max(...componentSizes);
+      const scaleRatio = maxSize / minSize;
+      scaleRatios[componentName] = scaleRatio;
+    }
+  }
+
+  // Create a new object to store the integrated face configuration
+  const integratedFace = {};
+
+  for (const componentName of componentNames) {
+    if (!features.hasOwnProperty(componentName)) {
+      continue;
+    }
+
+    const featureOptions = features[componentName];
+    const components = faces.map((face, index) => {
+      const weight = weights[index] || 1;
+      const component = face[componentName];
+      return component != null && weight > 0 ? { weight, component } : null;
+    }).filter((component) => component != null);
+
+    if (components.length === 0) {
+      continue;
+    }
+
+    // Determine the component to use for each property based on the feature options
+    const integratedComponent = {};
+    const propertyNames = Object.keys(featureOptions);
+
+    for (const propertyName of propertyNames) {
+      const options = featureOptions[propertyName];
+      const componentWeights = components.map((component) => {
+        const weight = options.hasOwnProperty(component.component.type) ? options[component.component.type] : 0;
+        return weight * component.weight;
+      });
+      const totalWeight = componentWeights.reduce((sum, weight) => sum + weight, 0);
+
+      if (totalWeight > 0) {
+        const componentValues = components.map((component) => component.component[propertyName]);
+        const weightedValues = componentValues.map((value, index) => value * componentWeights[index] / totalWeight);
+        const integratedValue = weightedValues.reduce((sum, value) => sum + value, 0);
+        integratedComponent[propertyName] = integratedValue;
+      }
+    }
+
+    // Integrate the component sizes based on the scale ratios
+    const scaleRatio = scaleRatios[componentName] || 1;
+
+    if (integratedComponent.hasOwnProperty('width')) {
+      const nonZeroWidths = components.map((component) => component.component.width).filter((width) => width > 0);
+      const minWidth = Math.min(...nonZeroWidths);
+      const maxWidth = Math.max(...nonZeroWidths);
+      const integratedWidth = maxWidth * scaleRatio;
+      integratedComponent.width = integratedWidth;
+    }
+
+    if (integratedComponent.hasOwnProperty('height')) {
+      const nonZeroHeights = components.map((component) => component.component.height).filter((height) => height > 0);
+      const minHeight = Math.min(...nonZeroHeights);
+      const maxHeight = Math.max(...nonZeroHeights);
+      const integratedHeight = maxHeight * scaleRatio;
+      integratedComponent.height = integratedHeight;
+    }
+
+    if (integratedComponent.hasOwnProperty('depth')) {
+      const nonZeroDepths = components.map((component) =>
 
 
 // ==============================
