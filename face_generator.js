@@ -9,6 +9,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
+// ==========================
+// EYES
+// ==========================
+
 function createEyeWithLids(options) {
   const eyeGroup = new THREE.Group();
 
@@ -62,7 +66,138 @@ function createEyeWithLids(options) {
   return eyeGroup;
 }
 
+// -------------------------
+// Eyes::Animations
+// -------------------------
+function moveEye(eyeGroup, xOffset, yOffset) {
+  const iris = eyeGroup.children.find((child) => child.name === 'iris');
+  const pupil = eyeGroup.children.find((child) => child.name === 'pupil');
 
+  if (iris && pupil) {
+    iris.position.x = xOffset;
+    iris.position.y = yOffset;
+    pupil.position.x = xOffset;
+    pupil.position.y = yOffset;
+  }
+}
+
+function setIrisDilation(eyeGroup, dilationFactor) {
+  const iris = eyeGroup.children.find((child) => child.name === 'iris');
+  const pupil = eyeGroup.children.find((child) => child.name === 'pupil');
+
+  if (iris && pupil) {
+    iris.scale.set(dilationFactor, dilationFactor, 1);
+    pupil.scale.set(dilationFactor, dilationFactor, 1);
+  }
+}
+
+function setEyelidPosition(eyeGroup, upperLidY, lowerLidY) {
+  const upperEyelid = eyeGroup.children.find((child) => child.name === 'upperEyelid');
+  const lowerEyelid = eyeGroup.children.find((child) => child.name === 'lowerEyelid');
+
+  if (upperEyelid && lowerEyelid) {
+    upperEyelid.position.y = upperLidY;
+    lowerEyelid.position.y = lowerLidY;
+  }
+}
+
+function animateBlink(eyeGroup, blinkSpeed) {
+  const upperEyelid = eyeGroup.children.find((child) => child.name === 'upperEyelid');
+  const lowerEyelid = eyeGroup.children.find((child) => child.name === 'lowerEyelid');
+
+  if (upperEyelid && lowerEyelid) {
+    const initialUpperY = upperEyelid.position.y;
+    const initialLowerY = lowerEyelid.position.y;
+
+    const blink = () => {
+      const blinkDuration = 1 / blinkSpeed;
+      setEyelidPosition(eyeGroup, initialUpperY - 0.1, initialLowerY + 0.1);
+      setTimeout(() => {
+        setEyelidPosition(eyeGroup, initialUpperY, initialLowerY);
+      }, blinkDuration * 1000);
+    };
+
+    setInterval(blink, 1000 / blinkSpeed);
+  }
+}
+
+function animateSquint(eyeGroup, squintSpeed, squintIntensity) {
+  const upperEyelid = eyeGroup.children.find((child) => child.name === 'upperEyelid');
+  const lowerEyelid = eyeGroup.children.find((child) => child.name === 'lowerEyelid');
+
+  if (upperEyelid && lowerEyelid) {
+    const initialUpperY = upperEyelid.position.y;
+    const initialLowerY = lowerEyelid.position.y;
+
+    const squint = () => {
+      const squintDuration = 1 / squintSpeed;
+      setEyelidPosition(eyeGroup, initialUpperY - squintIntensity, initialLowerY + squintIntensity);
+      setTimeout(() => {
+        setEyelidPosition(eyeGroup, initialUpperY, initialLowerY);
+      }, squintDuration * 1000);
+    };
+
+    setInterval(squint, 1000 / squintSpeed);
+  }
+}
+
+function animateEyeMovement(eyeGroup, xSpeed, ySpeed) {
+  eyeGroup.children.forEach((child) => {
+    if (child !== eyeGroup.children[3]) { // Exclude the orbicularis oculi muscle
+      moveEye(child, xSpeed, ySpeed);
+    }
+  });
+}
+
+function animateIrisDilation(eyeGroup, dilationSpeed, minDilation, maxDilation) {
+  const iris = eyeGroup.children[1];
+  const currentDilation = iris.geometry.parameters.radiusTop;
+  const newDilation = currentDilation + dilationSpeed;
+  
+  if (newDilation < minDilation) {
+    setIrisDilation(eyeGroup, minDilation);
+  } else if (newDilation > maxDilation) {
+    setIrisDilation(eyeGroup, maxDilation);
+  } else {
+    setIrisDilation(eyeGroup, newDilation);
+  }
+}
+
+function animateOrbicularisOculi(eyeGroup, contractionIntensity) {
+  const muscle = eyeGroup.children[3];
+  const initialRadius = eyeGroup.children[0].geometry.parameters.radius;
+  const targetRadius = initialRadius * (1 + contractionIntensity);
+  
+  muscle.geometry.dispose();
+  const muscleShape = new THREE.Shape();
+  muscleShape.absarc(0, 0, targetRadius, 0, Math.PI * 2, true);
+  muscle.geometry = new THREE.ShapeGeometry(muscleShape);
+}
+
+function animateFacialExpressions(faceModel, expressionParameters) {
+  const leftEye = faceModel.children[1];
+  const rightEye = faceModel.children[2];
+
+  // Animate eye movement
+  animateEyeMovement(leftEye, expressionParameters.eyeXSpeed, expressionParameters.eyeYSpeed);
+  animateEyeMovement(rightEye, expressionParameters.eyeXSpeed, expressionParameters.eyeYSpeed);
+
+  // Animate iris dilation
+  animateIrisDilation(leftEye, expressionParameters.dilationSpeed, expressionParameters.minDilation, expressionParameters.maxDilation);
+  animateIrisDilation(rightEye, expressionParameters.dilationSpeed, expressionParameters.minDilation, expressionParameters.maxDilation);
+
+  // Animate blinking
+  animateBlink(leftEye, expressionParameters.blinkSpeed);
+  animateBlink(rightEye, expressionParameters.blinkSpeed);
+
+  // Animate squinting
+  animateSquint(leftEye, expressionParameters.squintSpeed, expressionParameters.squintIntensity);
+  animateSquint(rightEye, expressionParameters.squintSpeed, expressionParameters.squintIntensity);
+
+  // Animate orbicularis oculi muscle contraction
+  animateOrbicularisOculi(leftEye, expressionParameters.contractionIntensity);
+  animateOrbicularisOculi(rightEye, expressionParameters.contractionIntensity);
+}
 
 // Function to create a generic 3D human face model
 function createFaceModel(options) {
