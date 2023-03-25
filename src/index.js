@@ -1,3 +1,6 @@
 // index.js
 
-export * from './features/face_generator'
+export * from './scene/scene';
+
+export * from './features/lips';
+

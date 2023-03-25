@@ -7,6 +7,9 @@ const lipParameters = {
   tubercleHeight: 0.2,
   philtrumWidth: 0.1,
   philtrumDepth: 0.1,
+  upperLipColor: 0xff8888,
+  philtrumColor: 0xffcccc,
+  lowerLipColor: 0xff8888
 };
 
 const thinLipsParameters = {
@@ -167,5 +170,48 @@ const fullUpperThinLowerLipParameters = {
   tubercleHeight: 0.3,
   philtrumWidth: 0.1,
   philtrumDepth: 0.1,
+};
+
+export const lipParametersMap = {
+  random: () => {
+    const keys = Object.keys(lipParametersMap);
+    const randomKey = keys[Math.floor(Math.random() * keys.length)];
+    return lipParametersMap[randomKey];
+  },
+  default: lipParameters,
+  thin: thinLipsParameters,
+  full: fullLipsParameters,
+  wide: wideLipsParameters,
+  narrow: narrowLipsParameters,
+  prominentCupidsBow: prominentCupidsBowLipsParameters,
+  heartShaped: heartShapedLipsParameters,
+  downTurned: downTurnedLipsParameters,
+  upTurned: upTurnedLipsParameters,
+  uneven: unevenLipsParameters,
+  goldilocks: goldilocksLipsParameters,
+  overfilled: overfilledLipsParameters,
+  protrudingUpper: protrudingUpperLipParameters,
+  protrudingLower: protrudingLowerLipParameters,
+  thinUpperFullLower: thinUpperFullLowerLipParameters,
+  fullUpperThinLower: fullUpperThinLowerLipParameters,
+};
+
+export {
+  lipParameters,
+  thinLipsParameters,
+  fullLipsParameters,
+  wideLipsParameters,
+  narrowLipsParameters,
+  prominentCupidsBowLipsParameters,
+  heartShapedLipsParameters,
+  downTurnedLipsParameters,
+  upTurnedLipsParameters,
+  unevenLipsParameters,
+  goldilocksLipsParameters,
+  overfilledLipsParameters,
+  protrudingUpperLipParameters,
+  protrudingLowerLipParameters,
+  thinUpperFullLowerLipParameters,
+  fullUpperThinLowerLipParameters,
 };
 

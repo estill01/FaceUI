@@ -1,9 +1,13 @@
 import React from 'react';
+import ThreeScene from './ThreeScene';
+
+
 
 const App = () => {
+
   return (
     <div className='h-screen w-screen'>
-      <h1>FaceUI</h1>
+      <ThreeScene />
     </div>
   );
 }

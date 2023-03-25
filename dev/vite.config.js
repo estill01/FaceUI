@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import reactPlugin from '@vitejs/plugin-react';
 
 export default defineConfig({
   resolve: {
@@ -12,5 +12,5 @@ export default defineConfig({
       external: ['face_ui'],
     }
   },
-  plugins: [react()],
+  plugins: [reactPlugin()],
 });
