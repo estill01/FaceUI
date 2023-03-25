@@ -1,0 +1,19 @@
+{
+  "name": "face_ui",
+  "version": "1.0.0",
+  "description": "Face maker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estill01/vertua_faceui.git"
+  },
+  "author": "Ethan Stillman <ehs.stillman@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/estill01/vertua_faceui/issues"
+  },
+  "homepage": "https://github.com/estill01/vertua_faceui#readme"
+}

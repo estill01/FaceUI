@@ -10,6 +10,8 @@ document.body.appendChild(renderer.domElement);
 
 // Facial Features
 //
+// Skull
+//
 // Forehead
 // - Eyebrows
 // - Corrugator Supercilii Muscles
@@ -38,6 +40,587 @@ document.body.appendChild(renderer.domElement);
 
 //
 // -------------------------
+
+// ==========================
+// Skull
+// ==========================
+// Function to create a frontal bone
+function createFrontalBone(options) {
+  const frontalBoneGeometry = new THREE.BoxGeometry(options.frontalBoneWidth, options.frontalBoneHeight, options.frontalBoneDepth);
+  const frontalBoneMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const frontalBone = new THREE.Mesh(frontalBoneGeometry, frontalBoneMaterial);
+  frontalBone.position.set(0, options.headSize / 2 - options.frontalBoneHeight / 2, options.headSize / 2 - options.frontalBoneDepth / 2);
+  return frontalBone;
+}
+
+// Function to create a temporal bone
+function createTemporalBone(options) {
+  const temporalBoneGeometry = new THREE.BoxGeometry(options.temporalBoneWidth, options.temporalBoneHeight, options.temporalBoneDepth);
+  const temporalBoneMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const temporalBone = new THREE.Mesh(temporalBoneGeometry, temporalBoneMaterial);
+  temporalBone.position.set(options.headSize / 2 - options.temporalBoneWidth / 2, options.temporalBoneHeight / 2, options.headSize / 2 - options.temporalBoneDepth / 2);
+  return temporalBone;
+}
+
+// ~~~~~~
+// TODO FIX IMPLEMENTATION
+function createTemporalBone(options) {
+  const temporalBoneGeometry = new THREE.Geometry();
+
+  // Define the temporal bone's major features
+  const boneWidth = options.boneWidth;
+  const boneHeight = options.boneHeight;
+  const boneDepth = options.boneDepth;
+  const mastoidProcessWidth = options.mastoidProcessWidth;
+  const mastoidProcessDepth = options.mastoidProcessDepth;
+  const externalAuditoryMeatusWidth = options.externalAuditoryMeatusWidth;
+  const externalAuditoryMeatusDepth = options.externalAuditoryMeatusDepth;
+  const zygomaticProcessHeight = options.zygomaticProcessHeight;
+  const zygomaticProcessDepth = options.zygomaticProcessDepth;
+
+  // Define the vertices for the temporal bone
+  const v0 = new THREE.Vector3(-boneWidth / 2, boneHeight / 2, boneDepth / 2);
+  const v1 = new THREE.Vector3(boneWidth / 2, boneHeight / 2, boneDepth / 2);
+  const v2 = new THREE.Vector3(boneWidth / 2, boneHeight / 2 - zygomaticProcessHeight, -boneDepth / 2);
+  const v3 = new THREE.Vector3(boneWidth / 2 - zygomaticProcessDepth, boneHeight / 2 - zygomaticProcessHeight, -boneDepth / 2);
+  const v4 = new THREE.Vector3(boneWidth / 2 - zygomaticProcessDepth, boneHeight / 2 - zygomaticProcessHeight, -boneDepth / 2 - mastoidProcessDepth);
+  const v5 = new THREE.Vector3(boneWidth / 2, boneHeight / 2 - zygomaticProcessHeight, -boneDepth / 2 - mastoidProcessDepth);
+  const v6 = new THREE.Vector3(boneWidth / 2, boneHeight / 2 - zygomaticProcessHeight - externalAuditoryMeatusWidth, -boneDepth / 2 - mastoidProcessDepth);
+  const v7 = new THREE.Vector3(boneWidth / 2 - externalAuditoryMeatusDepth, boneHeight / 2 - zygomaticProcessHeight - externalAuditoryMeatusWidth, -boneDepth / 2 - mastoidProcessDepth);
+  const v8 = new THREE.Vector3(boneWidth / 2 - externalAuditoryMeatusDepth, boneHeight / 2 - zygomaticProcessHeight - externalAuditoryMeatusWidth, -boneDepth / 2 - mastoidProcessDepth - externalAuditoryMeatusDepth);
+  const v9 = new THREE.Vector3(boneWidth / 2, boneHeight / 2 - zygomaticProcessHeight - externalAuditoryMeatusWidth, -boneDepth / 2 - mastoidProcessDepth - externalAuditoryMeatusDepth);
+  const v10 = new THREE.Vector3(boneWidth / 2 - mastoidProcessWidth, -boneHeight / 2, -boneDepth / 2);
+  const v11 = new THREE.Vector3(-boneWidth / 2, -boneHeight / 2, boneDepth / 2);
+  const v12 = new THREE.Vector3(-boneWidth / 2, -boneHeight / 2 + mastoidProcessWidth, -boneDepth / 2);
+  const v13 = new THREE.Vector3(-boneWidth / 2 + mastoidProcessDepth, -boneHeight / 2 + mastoidProcessWidth, -boneDepth / 2);
+  const
+
+  // Define the faces for the temporal bone
+  const f0 = new THREE.Face3(0, 1, 2);
+  const f1 = new THREE.Face3(0, 2, 3);
+  const f2 = new THREE.Face3(2, 1, 5);
+  const f3 = new THREE.Face3(2, 5, 4);
+  const f4 = new THREE.Face3(5, 1, 6);
+  const f5 = new THREE.Face3(5, 6, 7);
+  const f6 = new THREE.Face3(7, 6, 8);
+  const f7 = new THREE.Face3(7, 8, 9);
+  const f8 = new THREE.Face3(4, 5, 9);
+  const f9 = new THREE.Face3(4, 9, 10);
+  const f10 = new THREE.Face3(11, 0, 3);
+  const f11 = new THREE.Face3(11, 3, 12);
+  const f12 = new THREE.Face3(12, 3, 4);
+  const f13 = new THREE.Face3(12, 4, 13);
+  const f14 = new THREE.Face3(13, 4, 10);
+  const f15 = new THREE.Face3(13, 10, 11);
+  const f16 = new THREE.Face3(8, 6, 1);
+  const f17 = new THREE.Face3(8, 1, 0);
+  const f18 = new THREE.Face3(2, 4, 3);
+  const f19 = new THREE.Face3(2, 5, 4);
+
+  // Add the faces to the geometry
+  temporalBoneGeometry.faces.push(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19);
+
+  // Define the edges for the temporal bone
+  const e0 = new THREE.Edge3(0, 1);
+  const e1 = new THREE.Edge3(1, 2);
+  const e2 = new THREE.Edge3(2, 3);
+  const e3 = new THREE.Edge3(3, 4);
+  const e4 = new THREE.Edge3(4, 5);
+  const e5 = new THREE.Edge3(5, 6);
+  const e6 = new THREE.Edge3(6, 7);
+  const e7 = new THREE.Edge3(7, 8);
+  const e8 = new THREE.Edge3(8, 9);
+  const e9 = new THREE.Edge3(9, 4);
+  const e10 = new THREE.Edge3(9, 10);
+  const e11 = new THREE.Edge3(10, 0);
+  const e12 = new THREE.Edge3(11, 0);
+  const e13 = new THREE.Edge3(11, 12);
+  const e14 = new THREE.Edge3(12, 3);
+  const e15 = new THREE.Edge3(12, 4);
+  const e16 = new THREE.Edge3(13, 4);
+  const e17 = new THREE.Edge3(13, 10);
+  const e18 = new THREE.Edge3(13, 11);
+
+  // Add the edges to the geometry
+  temporalBoneGeometry.edges.push(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17, e18);
+
+  // Define the materials for the temporal bone
+  const boneMaterial = new THREE.MeshPhongMaterial({ color: 0xefefef, side: THREE.DoubleSide });
+  const mastoidProcessMaterial = new THREE.MeshPhongMaterial({ color: 0xcccccc, side: THREE.DoubleSide });
+  const externalAuditoryMeatusMaterial = new THREE.MeshPhongMaterial({ color: 0x333333, side: THREE.DoubleSide });
+
+  // Create the meshes for the bone and its features
+  const boneMesh = new THREE.Mesh(temporalBoneGeometry, boneMaterial);
+  const mastoidProcessMesh = new THREE.Mesh(new THREE.BoxGeometry(mastoidProcessWidth, mastoidProcessWidth, mastoidProcessDepth), mastoidProcessMaterial);
+  const externalAuditoryMeatusMesh = new THREE.Mesh(new THREE.BoxGeometry(externalAuditoryMeatusWidth, externalAuditoryMeatusDepth, externalAuditoryMeatusDepth), externalAuditoryMeatusMaterial);
+
+  // Position the mastoid process and external auditory meatus and add them to the bone mesh
+  mastoidProcessMesh.position.set(boneWidth / 2 - mastoidProcessWidth / 2, -boneHeight / 2 + mastoidProcessWidth / 2, -boneDepth / 2 - mastoidProcessDepth / 2);
+  externalAuditoryMeatusMesh.position.set(boneWidth / 2 - externalAuditoryMeatusDepth / 2, boneHeight / 2 - zygomaticProcessHeight - externalAuditoryMeatusWidth / 2, -boneDepth / 2 - mastoidProcessDepth - externalAuditoryMeatusDepth / 2);
+  boneMesh.add(mastoidProcessMesh);
+  boneMesh.add(externalAuditoryMeatusMesh);
+
+  // Return the bone mesh
+  return boneMesh;
+}
+
+function createParietalBone(options) {
+  const parietalBoneGeometry = new THREE.Geometry();
+
+  // Define the parietal bone's major features
+  const boneWidth = options.boneWidth;
+  const boneHeight = options.boneHeight;
+  const boneDepth = options.boneDepth;
+  const sagittalSutureWidth = options.sagittalSutureWidth;
+  const coronalSutureWidth = options.coronalSutureWidth;
+  const lambdoidSutureWidth = options.lambdoidSutureWidth;
+
+  // Define the vertices for the parietal bone
+  const v0 = new THREE.Vector3(-boneWidth / 2, boneHeight / 2, boneDepth / 2);
+  const v1 = new THREE.Vector3(boneWidth / 2, boneHeight / 2, boneDepth / 2);
+  const v2 = new THREE.Vector3(boneWidth / 2 - sagittalSutureWidth / 2, boneHeight / 2, -boneDepth / 2);
+  const v3 = new THREE.Vector3(-boneWidth / 2 + sagittalSutureWidth / 2, boneHeight / 2, -boneDepth / 2);
+  const v4 = new THREE.Vector3(-boneWidth / 2, -boneHeight / 2, boneDepth / 2);
+  const v5 = new THREE.Vector3(boneWidth / 2, -boneHeight / 2, boneDepth / 2);
+  const v6 = new THREE.Vector3(boneWidth / 2 - coronalSutureWidth / 2, -boneHeight / 2, -boneDepth / 2);
+  const v7 = new THREE.Vector3(-boneWidth / 2 + coronalSutureWidth / 2, -boneHeight / 2, -boneDepth / 2);
+  const v8 = new THREE.Vector3(-boneWidth / 2, boneHeight / 2 - lambdoidSutureWidth / 2, -boneDepth / 2);
+  const v9 = new THREE.Vector3(-boneWidth / 2, -boneHeight / 2 + lambdoidSutureWidth / 2, -boneDepth / 2);
+  const v10 = new THREE.Vector3(boneWidth / 2, boneHeight / 2 - lambdoidSutureWidth / 2, -boneDepth / 2);
+  const v11 = new THREE.Vector3(boneWidth / 2, -boneHeight / 2 + lambdoidSutureWidth / 2, -boneDepth / 2);
+
+  // Define the faces for the parietal bone
+  const f0 = new THREE.Face3(0, 1, 2);
+  const f1 = new THREE.Face3(0, 2, 3);
+  const f2 = new THREE.Face3(1, 5, 6);
+  const f3 = new THREE.Face3(1, 6, 2);
+  const f4 = new THREE.Face3(5, 4, 7);
+  const f5 = new THREE.Face3(5, 7, 6);
+  const f6 = new THREE.Face3(4, 0, 3);
+  const f7 = new THREE.Face3(4, 3, 7);
+  const f8 = new THREE.Face3(0, 4, 5);
+  const f9 = new THREE.Face3(0, 5, 1);
+
+  // Add the faces to the geometry
+  parietalBoneGeometry.faces.push(f0, f1,f2, f3, f4, f5, f6, f7, f8, f9);
+
+  // Define the edges for the parietal bone
+  const e0 = new THREE.Edge3(0, 1);
+  const e1 = new THREE.Edge3(1, 5);
+  const e2 = new THREE.Edge3(5, 4);
+  const e3 = new THREE.Edge3(4, 0);
+  const e4 = new THREE.Edge3(2, 3);
+  const e5 = new THREE.Edge3(3, 7);
+  const e6 = new THREE.Edge3(7, 6);
+  const e7 = new THREE.Edge3(6, 2);
+  const e8 = new THREE.Edge3(0, 8);
+  const e9 = new THREE.Edge3(8, 3);
+  const e10 = new THREE.Edge3(4, 9);
+  const e11 = new THREE.Edge3(9, 7);
+  const e12 = new THREE.Edge3(1, 10);
+  const e13 = new THREE.Edge3(10, 5);
+  const e14 = new THREE.Edge3(6, 11);
+  const e15 = new THREE.Edge3(11, 2);
+  const e16 = new THREE.Edge3(8, 9);
+  const e17 = new THREE.Edge3(10, 11);
+
+  // Add the edges to the geometry
+  parietalBoneGeometry.edges.push(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17);
+
+  // Define the materials for the parietal bone
+  const boneMaterial = new THREE.MeshPhongMaterial({ color: 0xefefef, side: THREE.DoubleSide });
+  const sutureMaterial = new THREE.MeshPhongMaterial({ color: 0x333333, side: THREE.DoubleSide });
+
+  // Create the meshes for the bone and sutures
+  const boneMesh = new THREE.Mesh(parietalBoneGeometry, boneMaterial);
+  const sagittalSutureMesh = new THREE.Mesh(new THREE.PlaneGeometry(sagittalSutureWidth, boneHeight), sutureMaterial);
+  const coronalSutureMesh = new THREE.Mesh(new THREE.PlaneGeometry(coronalSutureWidth, boneHeight), sutureMaterial);
+  const lambdoidSutureMesh = new THREE.Mesh(new THREE.PlaneGeometry(boneWidth, lambdoidSutureWidth), sutureMaterial);
+
+  // Position the sutures and add them to the bone mesh
+  sagittalSutureMesh.position.set(0, boneHeight / 2, -boneDepth / 2);
+  coronalSutureMesh.position.set(0, -boneHeight / 2, -boneDepth / 2);
+  lambdoidSutureMesh.position.set(-boneWidth / 2, 0, -boneDepth / 2);
+  boneMesh.add(sagittalSutureMesh);
+  boneMesh.add(coronalSutureMesh);
+  boneMesh.add(lambdoidSutureMesh);
+
+  // Return the bone mesh
+  return boneMesh;
+}
+
+
+
+function createLacrimalBone(options) {
+  const lacrimalBoneHeight = options.headSize * 0.05;
+  const lacrimalBoneWidth = options.headSize * 0.025;
+  const lacrimalBoneDepth = options.headSize * 0.025;
+
+  const lacrimalBoneGeometry = new THREE.BoxGeometry(lacrimalBoneWidth, lacrimalBoneHeight, lacrimalBoneDepth);
+  const lacrimalBoneMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+
+  // Define the primary structures of the lacrimal bone
+  const fossaGeometry = new THREE.BoxGeometry(lacrimalBoneWidth * 0.5, lacrimalBoneHeight * 0.8, lacrimalBoneDepth * 0.7);
+  const fossaMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const fossa = new THREE.Mesh(fossaGeometry, fossaMaterial);
+  fossa.position.set(lacrimalBoneWidth * 0.25, 0, 0);
+  
+  const orbitalPlateGeometry = new THREE.BoxGeometry(lacrimalBoneWidth * 0.6, lacrimalBoneHeight * 0.4, lacrimalBoneDepth * 0.2);
+  const orbitalPlateMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const orbitalPlate = new THREE.Mesh(orbitalPlateGeometry, orbitalPlateMaterial);
+  orbitalPlate.position.set(-lacrimalBoneWidth * 0.25, 0, lacrimalBoneDepth * 0.25);
+  
+  const posteriorCanaliculusGeometry = new THREE.CylinderGeometry(lacrimalBoneWidth * 0.1, lacrimalBoneWidth * 0.1, lacrimalBoneHeight * 0.1, 32);
+  const posteriorCanaliculusMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const posteriorCanaliculus = new THREE.Mesh(posteriorCanaliculusGeometry, posteriorCanaliculusMaterial);
+  posteriorCanaliculus.rotation.z = Math.PI / 2;
+  posteriorCanaliculus.position.set(-lacrimalBoneWidth * 0.25, 0, -lacrimalBoneDepth * 0.25);
+
+  // Create a group to hold all the lacrimal bone components
+  const lacrimalBoneGroup = new THREE.Group();
+  lacrimalBoneGroup.add(fossa);
+  lacrimalBoneGroup.add(orbitalPlate);
+  lacrimalBoneGroup.add(posteriorCanaliculus);
+
+  // Combine all the components into the final lacrimal bone mesh
+  const lacrimalBone = new THREE.Mesh(lacrimalBoneGeometry, lacrimalBoneMaterial);
+  lacrimalBone.add(lacrimalBoneGroup);
+
+  return lacrimalBone;
+}
+
+
+
+function createNasalBone(options) {
+  const nasalBoneGeometry = new THREE.BoxGeometry(options.nasalBoneWidth, options.nasalBoneHeight, options.nasalBoneDepth);
+
+  // Add a curvature to the upper part of the nasal bone
+  const nasalBoneUpperCurve = new THREE.SphereGeometry(options.nasalBoneUpperCurveRadius, 32, 32, 0, Math.PI);
+  nasalBoneUpperCurve.translate(0, options.nasalBoneHeight / 2 - options.nasalBoneUpperCurveRadius, -options.nasalBoneDepth / 2);
+  nasalBoneGeometry.merge(nasalBoneUpperCurve);
+
+  // Add a curvature to the lower part of the nasal bone
+  const nasalBoneLowerCurve = new THREE.SphereGeometry(options.nasalBoneLowerCurveRadius, 32, 32, Math.PI, Math.PI);
+  nasalBoneLowerCurve.translate(0, -options.nasalBoneHeight / 2 + options.nasalBoneLowerCurveRadius, -options.nasalBoneDepth / 2);
+  nasalBoneGeometry.merge(nasalBoneLowerCurve);
+
+  const nasalBoneMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const nasalBone = new THREE.Mesh(nasalBoneGeometry, nasalBoneMaterial);
+
+  // Position the nasal bone at the center of the face
+  nasalBone.position.set(0, options.headSize / 2 - options.nasalBoneHeight / 2, options.headSize / 2 - options.nasalBoneDepth / 2);
+
+  return nasalBone;
+}
+
+
+function createOccipitalBone(options) {
+  const occipitalGeometry = new THREE.Geometry();
+
+  // create the occipital squama
+  const squamaWidth = options.squamaWidth || 40;
+  const squamaHeight = options.squamaHeight || 40;
+  const squamaDepth = options.squamaDepth || 40;
+  const squamaGeometry = new THREE.BoxGeometry(squamaWidth, squamaHeight, squamaDepth);
+  const squamaMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const squama = new THREE.Mesh(squamaGeometry, squamaMaterial);
+  squama.position.set(0, options.headSize / 2 - squamaHeight / 2, -options.headSize / 2 + squamaDepth / 2);
+  occipitalGeometry.mergeMesh(squama);
+
+  // create the occipital condyles
+  const condyleRadius = options.condyleRadius || 8;
+  const condyleHeight = options.condyleHeight || 20;
+  const condyleGeometry = new THREE.CylinderGeometry(condyleRadius, condyleRadius, condyleHeight, 16);
+  const condyleMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const leftCondyle = new THREE.Mesh(condyleGeometry, condyleMaterial);
+  leftCondyle.position.set(-squamaWidth / 2 + condyleRadius, -squamaHeight / 2 - condyleHeight / 2, -squamaDepth / 2 + condyleRadius);
+  occipitalGeometry.mergeMesh(leftCondyle);
+
+  const rightCondyle = new THREE.Mesh(condyleGeometry, condyleMaterial);
+  rightCondyle.position.set(squamaWidth / 2 - condyleRadius, -squamaHeight / 2 - condyleHeight / 2, -squamaDepth / 2 + condyleRadius);
+  occipitalGeometry.mergeMesh(rightCondyle);
+
+  // create the foramen magnum
+  const foramenWidth = options.foramenWidth || 20;
+  const foramenHeight = options.foramenHeight || 25;
+  const foramenDepth = options.foramenDepth || 20;
+  const foramenGeometry = new THREE.BoxGeometry(foramenWidth, foramenHeight, foramenDepth);
+  const foramenMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const foramen = new THREE.Mesh(foramenGeometry, foramenMaterial);
+  foramen.position.set(0, -squamaHeight / 2 - foramenHeight / 2, -squamaDepth / 2 + foramenDepth / 2);
+  occipitalGeometry.mergeMesh(foramen);
+
+  return new THREE.Mesh(occipitalGeometry, squamaMaterial);
+}
+
+// Function to create the zygomatic bone
+function createZygomaticBone(options) {
+  const zygomaticMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const zygomaticBone = new THREE.Group();
+
+  // Main body of the zygomatic bone
+  const zygomaticBodyGeometry = new THREE.BoxGeometry(options.zygomaticBodyWidth, options.zygomaticBodyHeight, options.zygomaticBodyDepth);
+  const zygomaticBodyMesh = new THREE.Mesh(zygomaticBodyGeometry, zygomaticMaterial);
+  zygomaticBodyMesh.position.set(0, options.zygomaticBodyHeight / 2, 0);
+  zygomaticBone.add(zygomaticBodyMesh);
+
+  // Front process of the zygomatic bone
+  const zygomaticFrontProcessGeometry = new THREE.BoxGeometry(options.zygomaticFrontProcessWidth, options.zygomaticFrontProcessHeight, options.zygomaticFrontProcessDepth);
+  const zygomaticFrontProcessMesh = new THREE.Mesh(zygomaticFrontProcessGeometry, zygomaticMaterial);
+  zygomaticFrontProcessMesh.position.set(0, options.zygomaticBodyHeight / 2 + options.zygomaticFrontProcessHeight / 2, options.zygomaticBodyDepth / 2 - options.zygomaticFrontProcessDepth / 2);
+  zygomaticBone.add(zygomaticFrontProcessMesh);
+
+  // Temporal process of the zygomatic bone
+  const zygomaticTemporalProcessGeometry = new THREE.BoxGeometry(options.zygomaticTemporalProcessWidth, options.zygomaticTemporalProcessHeight, options.zygomaticTemporalProcessDepth);
+  const zygomaticTemporalProcessMesh = new THREE.Mesh(zygomaticTemporalProcessGeometry, zygomaticMaterial);
+  zygomaticTemporalProcessMesh.position.set(options.zygomaticBodyWidth / 2 - options.zygomaticTemporalProcessWidth / 2, options.zygomaticBodyHeight / 2 + options.zygomaticTemporalProcessHeight / 2, 0);
+  zygomaticBone.add(zygomaticTemporalProcessMesh);
+
+  // Orbital process of the zygomatic bone
+  const zygomaticOrbitalProcessGeometry = new THREE.BoxGeometry(options.zygomaticOrbitalProcessWidth, options.zygomaticOrbitalProcessHeight, options.zygomaticOrbitalProcessDepth);
+  const zygomaticOrbitalProcessMesh = new THREE.Mesh(zygomaticOrbitalProcessGeometry, zygomaticMaterial);
+  zygomaticOrbitalProcessMesh.position.set(0, options.zygomaticOrbitalProcessHeight / 2, -options.zygomaticBodyDepth / 2 + options.zygomaticOrbitalProcessDepth / 2);
+  zygomaticBone.add(zygomaticOrbitalProcessMesh);
+
+  return zygomaticBone;
+}
+
+function createMaxillaBone(options) {
+  const maxilla = new THREE.Group();
+
+  // Main body of the maxilla
+  const bodyGeometry = new THREE.BoxGeometry(options.maxillaWidth, options.maxillaHeight, options.maxillaDepth);
+  const bodyMaterial = new THREE.MeshPhongMaterial({ color: options.headColor });
+  const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+  body.position.set(0, 0, options.headSize / 2 - options.maxillaDepth / 2);
+  maxilla.add(body);
+
+  // Frontal process of the maxilla
+  const frontalProcessGeometry = new THREE.BoxGeometry(options.frontalProcessWidth, options.frontalProcessHeight, options.frontalProcessDepth);
+  const frontalProcess = new THREE.Mesh(frontalProcessGeometry, bodyMaterial);
+  frontalProcess.position.set(options.maxillaWidth / 2 - options.frontalProcessWidth / 2, options.frontalProcessHeight / 2, options.headSize / 2 - options.maxillaDepth / 2);
+  maxilla.add(frontalProcess);
+
+  // Zygomatic process of the maxilla
+  const zygomaticProcessGeometry = new THREE.BoxGeometry(options.zygomaticProcessWidth, options.zygomaticProcessHeight, options.zygomaticProcessDepth);
+  const zygomaticProcess = new THREE.Mesh(zygomaticProcessGeometry, bodyMaterial);
+  zygomaticProcess.position.set(0, options.maxillaHeight / 2 - options.zygomaticProcessHeight / 2, options.headSize / 2 - options.maxillaDepth / 2);
+  maxilla.add(zygomaticProcess);
+
+  // Palatine process of the maxilla
+  const palatineProcessGeometry = new THREE.BoxGeometry(options.palatineProcessWidth, options.palatineProcessHeight, options.palatineProcessDepth);
+  const palatineProcess = new THREE.Mesh(palatineProcessGeometry, bodyMaterial);
+  palatineProcess.position.set(0, -options.maxillaHeight / 2 + options.palatineProcessHeight / 2, options.headSize / 2 - options.maxillaDepth / 2);
+  maxilla.add(palatineProcess);
+
+  // Alveolar process of the maxilla
+  const alveolarProcessGeometry = new THREE.BoxGeometry(options.alveolarProcessWidth, options.alveolarProcessHeight, options.alveolarProcessDepth);
+  const alveolarProcessMaterial = new THREE.MeshPhongMaterial({ color: options.toothColor });
+  const alveolarProcess = new THREE.Mesh(alveolarProcessGeometry, alveolarProcessMaterial);
+  alveolarProcess.position.set(0, -options.maxillaHeight / 2 + options.alveolarProcessHeight / 2, options.headSize / 2 - options.maxillaDepth / 2);
+  maxilla.add(alveolarProcess);
+
+  return maxilla;
+}
+
+function createMandibleBone(options) {
+  const mandibleGeometry = new THREE.Geometry();
+
+  // Define the mandible's major features
+  const bodyLength = options.bodyLength;
+  const bodyWidth = options.bodyWidth;
+  const bodyHeight = options.bodyHeight;
+  const chinLength = options.chinLength;
+  const chinHeight = options.chinHeight;
+  const ramusWidth = options.ramusWidth;
+  const ramusHeight = options.ramusHeight;
+  const toothSocketWidth = options.toothSocketWidth;
+  const toothSocketHeight = options.toothSocketHeight;
+
+  // Define the vertices for the mandible
+  const v0 = new THREE.Vector3(0, 0, 0);
+  const v1 = new THREE.Vector3(0, bodyHeight, 0);
+  const v2 = new THREE.Vector3(0, bodyHeight, bodyWidth);
+  const v3 = new THREE.Vector3(0, 0, bodyWidth);
+  const v4 = new THREE.Vector3(0, chinHeight, bodyWidth + chinLength);
+  const v5 = new THREE.Vector3(0, 0, bodyWidth + chinLength);
+  const v6 = new THREE.Vector3(0, ramusHeight, -ramusWidth);
+  const v7 = new THREE.Vector3(0, bodyHeight, -ramusWidth);
+
+  // Define the faces for the mandible
+  const f0 = new THREE.Face3(0, 1, 2);
+  const f1 = new THREE.Face3(0, 2, 3);
+  const f2 = new THREE.Face3(3, 2, 4);
+  const f3 = new THREE.Face3(3, 4, 5);
+  const f4 = new THREE.Face3(0, 3, 5);
+  const f5 = new THREE.Face3(0, 5, 6);
+  const f6 = new THREE.Face3(1, 0, 6);
+  const f7 = new THREE.Face3(1, 6, 7);
+  const f8 = new THREE.Face3(2, 1, 7);
+  const f9 = new THREE.Face3(2, 7, 4);
+
+  // Add the vertices and faces to the geometry
+  mandibleGeometry.vertices.push(v0, v1, v2, v3, v4, v5, v6, v7);
+  mandibleGeometry.faces.push(f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
+
+  // Compute the face and vertex normals
+  mandibleGeometry.computeFaceNormals();
+  mandibleGeometry.computeVertexNormals();
+
+  // Create a mesh and material for the mandible
+  const mandibleMaterial = new THREE.MeshPhongMaterial({ color: options.boneColor });
+  const mandibleMesh = new THREE.Mesh(mandibleGeometry, mandibleMaterial);
+
+  // Create the tooth sockets
+  const toothSocketGeometry = new THREE.BoxGeometry(toothSocketWidth, toothSocketHeight, chinLength / 2);
+  const toothSocketMaterial = new THREE.MeshPhongMaterial({ color: options.toothSocketColor });
+  const toothSocketMesh1 = new THREE.Mesh(toothSocketGeometry, toothSocketMaterial);
+  const toothSocketMesh2 = new THREE.Mesh(toothSocketGeometry, toothSocketMaterial);
+  toothSocketMesh1.position.set(0, -toothSocketHeight / 2, bodyWidth);
+  toothSocketMesh2.position.set(0, -toothSocketHeight / 2, bodyWidth + chinLength);
+  mandibleMesh.add(toothSocketMesh1, toothSocketMesh2);
+
+  // Position and rotate the mandible
+  mandibleMesh.position.set(0, -options.headSize / 2 + bodyHeight / 2, 0);
+  mandibleMesh.rotation.set(0, Math.PI, 0);
+
+  return mandibleMesh;
+}
+
+// ----------------
+// Full Skull 
+// ----------------
+
+
+function createHeadModel(options) {
+  const headGroup = new THREE.Group();
+
+  const frontalBoneOptions = {
+    width: options.headSize * options.frontalBoneWidthRatio,
+    height: options.headSize * options.frontalBoneHeightRatio,
+    depth: options.headSize * options.frontalBoneDepthRatio,
+    color: options.headColor
+  };
+  const frontalBone = createFrontalBone(frontalBoneOptions);
+  headGroup.add(frontalBone);
+
+  const temporalBoneOptions = {
+    width: options.headSize * options.temporalBoneWidthRatio,
+    height: options.headSize * options.temporalBoneHeightRatio,
+    depth: options.headSize * options.temporalBoneDepthRatio,
+    color: options.headColor
+  };
+  const temporalBone1 = createTemporalBone(temporalBoneOptions);
+  headGroup.add(temporalBone1);
+
+  const temporalBone2 = createTemporalBone(temporalBoneOptions);
+  temporalBone2.rotation.y = Math.PI;
+  headGroup.add(temporalBone2);
+
+  const sphenoidBoneOptions = {
+    width: options.headSize * options.sphenoidBoneWidthRatio,
+    height: options.headSize * options.sphenoidBoneHeightRatio,
+    depth: options.headSize * options.sphenoidBoneDepthRatio,
+    color: options.headColor
+  };
+  const sphenoidBone = createSphenoidBone(sphenoidBoneOptions);
+  headGroup.add(sphenoidBone);
+
+  const ethmoidBoneOptions = {
+    width: options.headSize * options.ethmoidBoneWidthRatio,
+    height: options.headSize * options.ethmoidBoneHeightRatio,
+    depth: options.headSize * options.ethmoidBoneDepthRatio,
+    color: options.headColor
+  };
+  const ethmoidBone = createEthmoidBone(ethmoidBoneOptions);
+  ethmoidBone.position.set(0, 0, options.headSize * options.ethmoidBonePositionRatio);
+  headGroup.add(ethmoidBone);
+
+  const maxillaBoneOptions = {
+    width: options.headSize * options.maxillaBoneWidthRatio,
+    height: options.headSize * options.maxillaBoneHeightRatio,
+    depth: options.headSize * options.maxillaBoneDepthRatio,
+    color: options.headColor
+  };
+  const maxillaBone1 = createMaxillaBone(maxillaBoneOptions);
+  maxillaBone1.position.set(-options.headSize * options.maxillaBonePositionRatio, -options.headSize * options.maxillaBonePositionRatio, options.headSize * options.maxillaBonePositionRatio);
+  headGroup.add(maxillaBone1);
+
+  const maxillaBone2 = createMaxillaBone(maxillaBoneOptions);
+  maxillaBone2.rotation.y = Math.PI;
+  maxillaBone2.position.set(options.headSize * options.maxillaBonePositionRatio, -options.headSize * options.maxillaBonePositionRatio, options.headSize * options.maxillaBonePositionRatio);
+  headGroup.add(maxillaBone2);
+
+  const mandibleBoneOptions = {
+    width: options.headSize * options.mandibleBoneWidthRatio,
+    height: options.headSize * options.mandibleBoneHeightRatio,
+    depth: options.headSize * options.mandibleBoneDepthRatio,
+    color: options.headColor
+  };
+  const mandibleBone = createMandibleBone(mandibleBoneOptions);
+  mandibleBone.position.set(0, -options.headSize * options.mandibleBonePositionRatio, options.headSize * options.mandibleBonePositionRatio);
+  headGroup.add(mandibleBone);
+
+  const parietalBoneOptions = {
+    width: options.headSize * options.parietalBoneWidthRatio,
+    height: options.headSize * options.parietalBoneHeightRatio,
+    depth: options.headSize * options.parietalBoneDepthRatio,
+    color: options.headColor
+  };
+  const parietalBone1 = createParietalBone(parietalBoneOptions);
+  headGroup.add(parietalBone1);
+
+  const parietalBone2 = createParietalBone(parietalBoneOptions);
+  parietalBone2.rotation.y = Math.PI;
+  headGroup.add(parietalBone2);
+
+  const occipitalBoneOptions = {
+    width: options.headSize * options.occipitalBoneWidthRatio,
+    height: options.headSize * options.occipitalBoneHeightRatio,
+    depth: options.headSize * options.occipitalBoneDepthRatio,
+    color: options.headColor
+  };
+  const occipitalBone = createOccipitalBone(occipitalBoneOptions);
+  headGroup.add(occipitalBone);
+
+  const nasalBoneOptions = {
+    width: options.headSize * options.nasalBoneWidthRatio,
+    height: options.headSize * options.nasalBoneHeightRatio,
+    depth: options.headSize * options.nasalBoneDepthRatio,
+    color: options.headColor
+  };
+  const nasalBone = createNasalBone(nasalBoneOptions);
+  nasalBone.position.set(0, options.headSize * options.nasalBonePositionRatio, options.headSize * options.nasalBonePositionRatio);
+  headGroup.add(nasalBone);
+
+  const zygomaticBoneOptions = {
+    width: options.headSize * options.zygomaticBoneWidthRatio,
+    height: options.headSize * options.zygomaticBoneHeightRatio,
+    depth: options.headSize * options.zygomaticBoneDepthRatio,
+    color: options.headColor
+  };
+  const zygomaticBone1 = createZygomaticBone(zygomaticBoneOptions);
+  zygomaticBone1.position.set(-options.headSize * options.zygomaticBonePositionRatio, -options.headSize * options.zygomaticBonePositionRatio, options.headSize * options.zygomaticBonePositionRatio);
+  headGroup.add(zygomaticBone1);
+
+  const zygomaticBone2 = createZygomaticBone(zygomaticBoneOptions);
+  zygomaticBone2.rotation.y = Math.PI;
+  zygomaticBone2.position.set(options.headSize * options.zygomaticBonePositionRatio, -options.headSize * options.zygomaticBonePositionRatio, options.headSize * options.zygomaticBonePositionRatio);
+  headGroup.add(zygomaticBone2);
+
+  const lacrimalBoneOptions = {
+    width: options.headSize * options.lacrimalBoneWidthRatio,
+    height: options.headSize * options.lacrimalBoneHeightRatio,
+    depth: options.headSize * options.lacrimalBoneDepthRatio,
+    color: options.headColor
+  };
+  const lacrimalBone = createLacrimalBone(lacrimalBoneOptions);
+  lacrimalBone.position.set(-options.headSize * options.lacrimalBonePositionRatio, options.headSize * options.lacrimalBonePositionRatio, options.headSize * options.lacrimalBonePositionRatio);
+  headGroup.add(lacrimalBone);
+
+  return headGroup;
+}
+
 
 // ==========================
 // Forehead
@@ -905,104 +1488,241 @@ function generateNoseVariations(noseConfig, numVariations, stochasticity) {
   return variations;
 }
 
-function integrateFaces(faces) {
-  // Compute the relative scale and orientation of the face components
-  const scaleRatios = {};
-  const componentNames = Object.keys(faces[0]);
+function integratedFaces(faces, options = {}) {
+  const {
+    featureWeights = {},
+    featureOverrides = {},
+    featureExcludeList = [],
+    featureIncludeList = [],
+    randomize = true,
+    stochasticity = 0.5
+  } = options;
 
-  for (const componentName of componentNames) {
-    const componentSizes = faces.map((face) => face[componentName]?.width);
-    const nonZeroSizes = componentSizes.filter((size) => size > 0);
+  const integratedFace = new THREE.Group();
 
-    if (nonZeroSizes.length === faces.length) {
-      // All faces have this component, so compute the scale ratio
-      const minSize = Math.min(...componentSizes);
-      const maxSize = Math.max(...componentSizes);
-      const scaleRatio = maxSize / minSize;
-      scaleRatios[componentName] = scaleRatio;
-    }
-  }
-
-function integrateFaces(faces, options = {}) {
-  const { weights = {}, features = {} } = options;
-
-  // Compute the relative scale and orientation of the face components
-  const scaleRatios = {};
-  const componentNames = Object.keys(faces[0]);
-
-  for (const componentName of componentNames) {
-    const componentSizes = faces.map((face) => face[componentName]?.width);
-    const nonZeroSizes = componentSizes.filter((size) => size > 0);
-
-    if (nonZeroSizes.length === faces.length) {
-      // All faces have this component, so compute the scale ratio
-      const minSize = Math.min(...componentSizes);
-      const maxSize = Math.max(...componentSizes);
-      const scaleRatio = maxSize / minSize;
-      scaleRatios[componentName] = scaleRatio;
-    }
-  }
-
-  // Create a new object to store the integrated face configuration
-  const integratedFace = {};
-
-  for (const componentName of componentNames) {
-    if (!features.hasOwnProperty(componentName)) {
+  const featureNames = faces[0].children.map(child => child.name);
+  for (const featureName of featureNames) {
+    if (featureExcludeList.includes(featureName) || (featureIncludeList.length > 0 && !featureIncludeList.includes(featureName))) {
       continue;
     }
 
-    const featureOptions = features[componentName];
-    const components = faces.map((face, index) => {
-      const weight = weights[index] || 1;
-      const component = face[componentName];
-      return component != null && weight > 0 ? { weight, component } : null;
-    }).filter((component) => component != null);
-
-    if (components.length === 0) {
-      continue;
-    }
-
-    // Determine the component to use for each property based on the feature options
-    const integratedComponent = {};
-    const propertyNames = Object.keys(featureOptions);
-
-    for (const propertyName of propertyNames) {
-      const options = featureOptions[propertyName];
-      const componentWeights = components.map((component) => {
-        const weight = options.hasOwnProperty(component.component.type) ? options[component.component.type] : 0;
-        return weight * component.weight;
-      });
-      const totalWeight = componentWeights.reduce((sum, weight) => sum + weight, 0);
-
-      if (totalWeight > 0) {
-        const componentValues = components.map((component) => component.component[propertyName]);
-        const weightedValues = componentValues.map((value, index) => value * componentWeights[index] / totalWeight);
-        const integratedValue = weightedValues.reduce((sum, value) => sum + value, 0);
-        integratedComponent[propertyName] = integratedValue;
+    let feature;
+    if (featureOverrides[featureName]) {
+      feature = featureOverrides[featureName].clone();
+    } else if (featureWeights[featureName]) {
+      const weightSum = Object.values(featureWeights[featureName]).reduce((sum, weight) => sum + weight, 0);
+      const featureWeightsNormalized = {};
+      for (const [faceIndex, weight] of Object.entries(featureWeights[featureName])) {
+        featureWeightsNormalized[faceIndex] = weight / weightSum;
       }
+      const featureConfigs = featureWeightsNormalized.map((weight, index) => ({ face: faces[index], weight }));
+      feature = integrateFeature(featureConfigs, featureName, randomize, stochasticity);
+    } else {
+      feature = faces[0].getObjectByName(featureName).clone();
     }
 
-    // Integrate the component sizes based on the scale ratios
-    const scaleRatio = scaleRatios[componentName] || 1;
+    feature.name = featureName;
+    integratedFace.add(feature);
+  }
 
-    if (integratedComponent.hasOwnProperty('width')) {
-      const nonZeroWidths = components.map((component) => component.component.width).filter((width) => width > 0);
-      const minWidth = Math.min(...nonZeroWidths);
-      const maxWidth = Math.max(...nonZeroWidths);
-      const integratedWidth = maxWidth * scaleRatio;
-      integratedComponent.width = integratedWidth;
+  return integratedFace;
+}
+
+function integrateFeature(featureConfigs, featureName, randomize = true, stochasticity = 0.5) {
+  const integratedFeature = new THREE.Group();
+
+  const featureType = featureName.match(/[A-Z][a-z]*/g).join('_').toLowerCase();
+  const featureComponents = Object.fromEntries(featureConfigs.map(({ face }) => [face.userData.name, face.getObjectByName(featureName)]));
+
+  // Compute weights for each face
+  const weights = featureConfigs.map(({ weight }) => weight);
+
+  // Compute relative scale of the features compared to each other
+  const featureScales = Object.fromEntries(Object.entries(featureComponents)
+    .map(([name, feature]) => [name, new THREE.Vector3().setFromMatrixScale(feature.matrixWorld)]));
+  const totalScale = Object.values(featureScales).reduce((sum, scale) => sum.add(scale), new THREE.Vector3(0, 0, 0));
+  const scaleWeights = weights.map(weight => weight / totalScale.length());
+  const relativeScales = Object.fromEntries(Object.entries(featureScales)
+    .map(([name, scale]) => [name, scale.multiplyScalar(scaleWeights[weights.indexOf(featureConfigs.find(({ face }) => face.userData.name === name).weight)]))));
+
+  // Compute relative position and orientation of the features compared to each other
+  const featurePositions = Object.fromEntries(Object.entries(featureComponents)
+    .map(([name, feature]) => [name, new THREE.Vector3().setFromMatrixPosition(feature.matrixWorld)]));
+  const centroid = Object.values(featurePositions).reduce((sum, position) => sum.add(position), new THREE.Vector3(0, 0, 0)).multiplyScalar(1 / featureConfigs.length);
+  const relativePositions = Object.fromEntries(Object.entries(featurePositions)
+    .map(([name, position]) => [name, position.sub(centroid).multiplyScalar(scaleWeights[weights.indexOf(featureConfigs.find(({ face }) => face.userData.name === name).weight))])]));
+  const relativeOrientations = Object.fromEntries(Object.entries(featureComponents)
+    .map(([name, feature]) => [name, feature.getWorldQuaternion(new THREE.Quaternion()).invert()]));
+
+  // Apply relative scales, positions, and orientations to the features
+  for (let i = 0; i < featureConfigs.length; i++) {
+    const { face, weight } = featureConfigs[i];
+    const featureComponent = featureComponents[face.userData.name];
+    const relativeScale = relativeScales[face.userData.name];
+    const relativePosition = relativePositions[face.userData.name];
+    const relativeOrientation = relativeOrientations[face.userData.name];
+
+    let newFeatureComponent;
+    if (randomize && Math.random() < stochasticity) {
+      newFeatureComponent = featureComponent.clone();
+      newFeatureComponent.scale.copy(new THREE.Vector3(1, 1, 1).lerp(relativeScale, Math.random()));
+      newFeatureComponent.position.copy(new THREE.Vector3(0, 0, 0).lerp(relativePosition, Math.random()));
+      newFeatureComponent.setRotationFromQuaternion(new THREE.Quaternion().slerp(relativeOrientation, Math.random()));
+    } else {
+      newFeatureComponent = featureComponent.clone();
+      newFeatureComponent.scale.copy(relativeScale);
+      newFeatureComponent.position.copy(relativePosition);
+      newFeatureComponent.setRotationFromQuaternion(relativeOrientation);
     }
 
-    if (integratedComponent.hasOwnProperty('height')) {
-      const nonZeroHeights = components.map((component) => component.component.height).filter((height) => height > 0);
-      const minHeight = Math.min(...nonZeroHeights);
-      const maxHeight = Math.max(...nonZeroHeights);
-      const integratedHeight = maxHeight * scaleRatio;
-      integratedComponent.height = integratedHeight;
-    }
+    integratedFeature.add(newFeatureComponent);
+  }
 
-    if (integratedComponent.hasOwnProperty('depth')) {
-      const nonZeroDepths = components.map((component) =>
+  integratedFeature.name = featureName;
+  return integratedFeature;
+}
+
+
+// ---------------------------------
+// COnvenience Functions for modifying / merging facial features 
+// ----------------------------------
+function integrateNoses(faces, options = {}) {
+  const features = {
+    nose: {
+      height: { 'nose-bridge': 0.5, 'lower-lateral-cartilage': 0.5 },
+      width: { 'nasal-bone': 0.5, 'upper-lateral-cartilage': 0.25, 'lower-lateral-cartilage': 0.25 },
+      depth: { 'nasal-bone': 0.5, 'lower-lateral-cartilage': 0.5 },
+      nostrilSize: { 'nostril': 1 },
+      nostrilFlare: { 'nostril': 1 },
+    },
+  };
+
+  const mergedOptions = {
+    features: { ...features, ...options.features },
+    weights: options.weights,
+  };
+
+  return integrateFaces(faces, mergedOptions);
+}
+
+function integrateEyes(faces, options = {}) {
+  const features = {
+    eye: {
+      height: { 'eyelid-top': 0.5, 'eyelid-bottom': 0.5 },
+      width: { 'eyeball': 1 },
+    },
+  };
+
+  const mergedOptions = {
+    features: { ...features, ...options.features },
+    weights: options.weights,
+  };
+
+  return integrateFaces(faces, mergedOptions);
+}
+
+function integrateMouths(faces, options = {}) {
+  const features = {
+    mouth: {
+      height: { 'upper-lip': 0.5, 'lower-lip': 0.5 },
+      width: { 'mouth': 1 },
+      depth: { 'mouth': 1 },
+    },
+  };
+
+  const mergedOptions = {
+    features: { ...features, ...options.features },
+    weights: options.weights,
+  };
+
+  return integrateFaces(faces, mergedOptions);
+}
+
+function integrateCheeks(faces, options = {}) {
+  const features = {
+    cheek: {
+      height: { 'cheekbone': 0.5, 'buccal-region': 0.5 },
+      width: { 'cheekbone': 0.5, 'buccal-region': 0.5 },
+      depth: { 'cheekbone': 0.5, 'buccal-region': 0.5 },
+    },
+  };
+
+  const mergedOptions = {
+    features: { ...features, ...options.features },
+    weights: options.weights,
+  };
+
+  return integrateFaces(faces, mergedOptions);
+}
+
+// Helper function to adjust the geometry of a feature
+function adjustFeatureGeometry(face, featureName, adjustFn) {
+  const feature = face.getObjectByName(featureName);
+  if (!feature) {
+    console.warn(`Feature ${featureName} not found in face.`);
+    return;
+  }
+  feature.geometry = adjustFn(feature.geometry);
+}
+
+// Convenience function to scale a feature by a given factor
+function scaleFeature(face, featureName, scale) {
+  adjustFeatureGeometry(face, featureName, geometry => {
+    geometry.scale(scale, scale, scale);
+    return geometry;
+  });
+}
+
+// Convenience function to rotate a feature around the X, Y, and/or Z axis
+function rotateFeature(face, featureName, xRot = 0, yRot = 0, zRot = 0) {
+  const feature = face.getObjectByName(featureName);
+  if (!feature) {
+    console.warn(`Feature ${featureName} not found in face.`);
+    return;
+  }
+  feature.rotateX(xRot);
+  feature.rotateY(yRot);
+  feature.rotateZ(zRot);
+}
+
+// Convenience function to generate a set of random variations for a feature
+function generateFeatureVariations(face, featureName, count = 5, adjustFn) {
+  const feature = face.getObjectByName(featureName);
+  if (!feature) {
+    console.warn(`Feature ${featureName} not found in face.`);
+    return;
+  }
+  const variations = [];
+  for (let i = 0; i < count; i++) {
+    const variation = feature.clone();
+    if (adjustFn) {
+      adjustFn(variation);
+    }
+    variations.push(variation);
+  }
+  return variations;
+}
+
+// Convenience function to generate a set of random nose variations
+function generateNoseVariations(face, count = 5, adjustFn) {
+  return generateFeatureVariations(face, 'nose', count, adjustFn);
+}
+
+// Convenience function to generate a set of random eye variations
+function generateEyeVariations(face, count = 5, adjustFn) {
+  return generateFeatureVariations(face, 'left-eye', count, adjustFn);
+}
+
+// Convenience function to generate a set of random mouth variations
+function generateMouthVariations(face, count = 5, adjustFn) {
+  return generateFeatureVariations(face, 'mouth', count, adjustFn);
+}
+
+// Convenience function to generate a set of random cheek variations
+function generateCheekVariations(face, count = 5, adjustFn) {
+  return generateFeatureVariations(face, 'left-cheek', count, adjustFn);
+}
+
 
 
 // ==============================
