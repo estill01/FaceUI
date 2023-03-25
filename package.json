@@ -1,10 +1,11 @@
 {
   "name": "face_ui",
   "version": "1.0.0",
-  "description": "Face maker",
-  "main": "index.js",
+  "description": "Face UI",
+  "main": "src/index.js",
   "scripts": {
     "pack": "npm pack --pack-destination dist",
+    "dev": "cd dev && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
