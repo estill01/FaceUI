@@ -1,7 +1,11 @@
 // index.js
 
-// make the face model
-// make the scene
-// make the camera
-// make the renderer
-// load the model
+export * from './features/face_generator'
+
+export const FaceUI = () => {
+  return (
+    <div>
+      <FaceGenerator />
+    </div>
+  )
+}
