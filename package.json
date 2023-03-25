@@ -4,6 +4,7 @@
   "description": "Face maker",
   "main": "index.js",
   "scripts": {
+    "pack": "npm pack --pack-destination dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/estill01/vertua_faceui/issues"
   },
-  "homepage": "https://github.com/estill01/vertua_faceui#readme"
+  "homepage": "https://github.com/estill01/vertua_faceui#readme",
+  "devDependencies": {
+    "express": "^4.18.2",
+    "vite": "^4.2.1"
+  }
 }
